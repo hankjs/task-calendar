@@ -11,6 +11,15 @@ importers:
       '@electron/rebuild':
         specifier: ^3.2.10
         version: 3.2.10
+      '@packages/config':
+        specifier: workspace:^
+        version: link:packages/config
+      '@packages/env':
+        specifier: workspace:^
+        version: link:packages/env
+      '@packages/ipc':
+        specifier: workspace:^
+        version: link:packages/ipc
       '@packages/share':
         specifier: workspace:^
         version: link:packages/share
@@ -68,6 +77,28 @@ importers:
       vue-tsc:
         specifier: ^1.0.11
         version: 1.0.11(typescript@4.9.3)
+
+  packages/config: {}
+
+  packages/env: {}
+
+  packages/ipc:
+    devDependencies:
+      '@packages/config':
+        specifier: workspace:^
+        version: link:../config
+      '@packages/share':
+        specifier: workspace:^
+        version: link:../share
+
+  packages/preload:
+    devDependencies:
+      '@packages/config':
+        specifier: workspace:^
+        version: link:../config
+      '@packages/share':
+        specifier: workspace:^
+        version: link:../share
 
   packages/share: {}
 

@@ -27,8 +27,8 @@
     },
   },
   "include": [
-    "src/preload.d.ts",
+    "**/typings/**/*.d.ts",
     "src/main/**/*.ts",
-    "src/main/**/*.d.ts", "packages/share/src/Accelerator.ts",
+    "src/main/**/*.d.ts", "packages/share/src/Accelerator.ts", "packages/config/src/window.ts",
   ],
 }

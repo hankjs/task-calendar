@@ -1,7 +1,7 @@
 import { contextBridge } from 'electron';
-import { Preload } from "src/preload";
-import { GlobalShortcutBridge } from "./ipc/globalShortcut/preload";
-import { ElectronBridge } from "./ipc/electron/preload";
+import { Preload } from "src/typings/preload";
+import { GlobalShortcutBridge } from "@packages/ipc/main/globalShortcut/preload";
+import { ElectronBridge } from "@packages/ipc/main/electron/preload";
 
 const api: Preload.ElectronBridge = {
     versions: {
@@ -13,4 +13,4 @@ const api: Preload.ElectronBridge = {
     electron: ElectronBridge
 }
 
-contextBridge.exposeInMainWorld('electronBridge', api);
+contextBridge.exposeInMainWorld('TCBridge', api);

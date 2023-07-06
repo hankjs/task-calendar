@@ -31,6 +31,6 @@ export namespace Preload {
 
 declare global {
   interface Window {
-    electronBridge: Preload.ElectronBridge;
+    TCBridge: Preload.ElectronBridge;
   }
 }

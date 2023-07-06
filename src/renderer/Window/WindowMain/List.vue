@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { Accelerator } from "@packages/share";
 import { ref } from "vue";
-const { electronBridge } = window;
+const { TCBridge } = window;
 
 const id = ref<number | null>(null);
 const accelerator: Accelerator.Pattern = `${Accelerator.Modifier.Ctrl}+${Accelerator.Modifier.Shift}+${Accelerator.Key.KeyA}`;
 
-electronBridge.electron.on("gs", (...args: any[]) => {
+TCBridge.electron.on("gs", (...args: any[]) => {
   console.log("List message", args);
 });
 
@@ -15,7 +15,7 @@ async function onClick() {
     console.log(event, accelerator);
     console.log("CurrentProcessId", id);
   };
-  const registered = await electronBridge.globalShortcut.register(
+  const registered = await TCBridge.globalShortcut.register(
     accelerator,
     callback
   );
@@ -26,9 +26,9 @@ async function onClick() {
 <template>
   {{ id }}
   <ul>
-    <li>chrome version: {{ electronBridge.versions.chrome() }}</li>
-    <li>node version: {{ electronBridge.versions.node() }}</li>
-    <li>electron version: {{ electronBridge.versions.electron() }}</li>
+    <li>chrome version: {{ TCBridge.versions.chrome() }}</li>
+    <li>node version: {{ TCBridge.versions.node() }}</li>
+    <li>electron version: {{ TCBridge.versions.electron() }}</li>
   </ul>
   <button @click="onClick">getCurrentProcessId</button>
 </template>

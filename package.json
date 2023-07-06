@@ -5,13 +5,17 @@
   "description": "template-electron vite",
   "author": "hank",
   "scripts": {
-    "start": "npm run dev",
     "dev": "vite",
+    "start": "npm run dev",
+    "start:web": "vite --mode web",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.2.10",
+    "@packages/config": "workspace:^",
+    "@packages/env": "workspace:^",
+    "@packages/ipc": "workspace:^",
     "@packages/share": "workspace:^",
     "@types/lodash-es": "^4.17.7",
     "@vitejs/plugin-vue": "^4.0.0",

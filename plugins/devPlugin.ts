@@ -1,55 +1,17 @@
 import { ViteDevServer } from "vite";
-import { nativeNodeModulesPlugin } from "./nativeNodeModules";
+import { Options } from "./helpers/options.type";
+import { ElectronDevBuilder } from "./helpers/ElectronDevBuilder";
 
-const esbuildDefine = {
-  __DEV__: "true",
-};
-
-export let devPlugin = () => {
+export let devPlugin = (options: Options) => {
   return {
     name: "dev-plugin",
     async configureServer(server: ViteDevServer) {
-      const esbuild = require("esbuild");
-      esbuild.buildSync({
-        entryPoints: ["./src/main/preload.ts"],
-        define: esbuildDefine,
-        bundle: true,
-        platform: "node",
-        outfile: "./dist/preload.js",
-        external: ["electron"],
-      });
-      await esbuild.build({
-        entryPoints: ["./src/main/main.ts"],
-        define: esbuildDefine,
-        bundle: true,
-        platform: "node",
-        outfile: "./dist/main.js",
-        plugins: [nativeNodeModulesPlugin],
-        external: ["electron"],
-      });
-      server.httpServer!.once("listening", () => {
-        let { spawn } = require("child_process");
-        let addressInfo = server.httpServer!.address();
-        if (!addressInfo) {
-          return;
-        }
-        let httpAddress =
-          typeof addressInfo === "string"
-            ? addressInfo
-            : `http://${addressInfo.address}:${addressInfo.port}`;
-        let electronProcess = spawn(
-          require("electron").toString(),
-          ["./dist/main.js", httpAddress],
-          {
-            cwd: process.cwd(),
-            stdio: "inherit",
-          }
-        );
-        electronProcess.on("close", () => {
-          server.close();
-          process.exit();
-        });
-      });
+      if (options.defines?.VITE_APP_PLATFORM === "Web") {
+        return;
+      }
+      const builder = new ElectronDevBuilder(options);
+      await builder.build()
+      await builder.run(server);
     },
   };
 };
@@ -67,8 +29,7 @@ export let getReplacer = () => {
     "url",
     "robotjs",
   ];
-  let result = {
-  };
+  let result = {};
   for (let item of externalModels) {
     result[item] = () => ({
       find: new RegExp(`^${item}$`),

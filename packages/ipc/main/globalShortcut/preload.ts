@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron"
-import type { Accelerator } from "../../../../packages/share/src/Accelerator";
+import type { Accelerator } from "@packages/share/src/Accelerator";
 import { IPCGlobalShortcut } from "./namespace";
 
 /**

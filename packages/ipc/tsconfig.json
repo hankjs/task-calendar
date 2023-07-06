@@ -20,17 +20,8 @@
     "noEmit": false,
     "rootDir": "./",
     "baseUrl": "./",
-    "paths": {
-      "src/*": [
-        "src/*"
-      ]
-    },
   },
   "include": [
-    "**/typings/**/*.d.ts",
-    "src/renderer/**/*.ts",
-    "src/renderer/**/*.d.ts",
-    "src/renderer/**/*.tsx",
-    "src/renderer/**/*.vue"
+    "src/**/*.ts",
   ],
 }
