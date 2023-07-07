@@ -9,6 +9,7 @@ declare global {
 
 export async function setupBridge() {
   if (ENV.VITE_APP_PLATFORM === "Electron") {
+    // Electron init bridge in src/main/preload.ts
     return;
   }
 
