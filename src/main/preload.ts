@@ -1,9 +1,9 @@
 import { contextBridge } from "electron";
 import { Preload } from "@task/ipc/interface/preload";
-import { createBridge } from "@task/ipc/renderer";
+import { TCBridgeElectron } from "@task/ipc/renderer/platform/electron";
 
 const api: Preload.TCBridge = {
-  ...createBridge(),
+  ...TCBridgeElectron,
 };
 
 contextBridge.exposeInMainWorld("TCBridge", api);

@@ -1,12 +1,17 @@
 import { ENV } from "@task/env";
 import { Preload } from "../interface/preload";
 
-type TCBridge = Preload.TCBridge;
-
-export function createBridge(): TCBridge {
-  if (ENV.VITE_APP_PLATFORM === "Electron") {
-    return require("./platform/electron").default;
+declare global {
+  interface Window {
+    TCBridge: Preload.TCBridge;
   }
-  // TODO Web
-  return require("./platform/electron").default;
+}
+
+export async function setupBridge() {
+  if (ENV.VITE_APP_PLATFORM === "Electron") {
+    return;
+  }
+
+  const bridge = await import("./platform/web");
+  window.TCBridge = bridge.TCBridgeWeb;
 }

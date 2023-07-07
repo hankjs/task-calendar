@@ -6,5 +6,3 @@ export const TCBridgeElectron: Preload.TCBridge = {
   electron: ElectronBridge,
   globalShortcut: GlobalShortcutBridge,
 };
-
-export default TCBridgeElectron;
