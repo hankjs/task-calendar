@@ -1,6 +1,6 @@
 import { app, Event, BrowserWindow } from "electron";
 
-import { IPCRegister, CommonWindowEvent } from "@packages/ipc/main";
+import { IPCRegister, CommonWindowEvent } from "@task/ipc/main";
 import { PluginManager } from "./plugins/PluginManager";
 import { MainWindow } from "./windows/MainWindow";
 import { WindowManager } from "./windows/WindowManager";

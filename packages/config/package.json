@@ -1,5 +1,5 @@
 {
-  "name": "@packages/config",
+  "name": "@task/config",
   "version": "0.0.1",
   "description": "",
   "main": "src/index.ts",

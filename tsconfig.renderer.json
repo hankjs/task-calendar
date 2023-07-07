@@ -14,7 +14,8 @@
       "DOM"
     ],
     "types": [
-      "lodash-es"
+      "lodash-es",
+      "vite/client"
     ],
     "skipLibCheck": true,
     "noEmit": false,

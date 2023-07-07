@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
-import { CommonWindowEvent } from "@packages/ipc/main";
-import { WINDOW_CONFIG } from "@packages/config/src/window";
+import { CommonWindowEvent } from "@task/ipc/main";
+import { WINDOW_CONFIG } from "@task/config/src/window";
 import { AppScheme } from "../protocol/app";
 import { BaseWindow } from "./BaseWindow";
 import { setting } from "../setting/Setting";

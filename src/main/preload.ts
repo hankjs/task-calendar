@@ -1,16 +1,9 @@
-import { contextBridge } from 'electron';
-import { Preload } from "src/typings/preload";
-import { GlobalShortcutBridge } from "@packages/ipc/main/globalShortcut/preload";
-import { ElectronBridge } from "@packages/ipc/main/electron/preload";
+import { contextBridge } from "electron";
+import { Preload } from "@task/ipc/interface/preload";
+import { createBridge } from "@task/ipc/renderer";
 
-const api: Preload.ElectronBridge = {
-    versions: {
-        node: () => process.versions.node,
-        chrome: () => process.versions.chrome,
-        electron: () => process.versions.electron,
-    },
-    globalShortcut: GlobalShortcutBridge,
-    electron: ElectronBridge
-}
+const api: Preload.TCBridge = {
+  ...createBridge(),
+};
 
-contextBridge.exposeInMainWorld('TCBridge', api);
+contextBridge.exposeInMainWorld("TCBridge", api);

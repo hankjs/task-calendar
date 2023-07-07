@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain, app } from "electron";
 import { cloneDeep } from "lodash-es";
-import { WINDOW_CONFIG } from "@packages/config";
+import { WINDOW_CONFIG } from "@task/config";
 
 export class CommonWindowEvent {
   private static getWin(event: any) {

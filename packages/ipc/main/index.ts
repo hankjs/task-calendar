@@ -1,7 +1,7 @@
 import { IPCElectronRegister } from "./electron/main";
-import { IPCGlobalShortcutRegister } from "./globalShortcut/main";
+import { IPCGlobalShortcutRegister } from "./global-shortcut/main";
 
-export { CommonWindowEvent } from "./CommonWindowEvent";
+export { CommonWindowEvent } from "./window-event";
 
 export function IPCRegister() {
   IPCElectronRegister();

@@ -1,5 +1,5 @@
 {
-  "name": "@packages/env",
+  "name": "@task/env",
   "version": "0.0.1",
   "description": "",
   "main": "src/index.ts",
