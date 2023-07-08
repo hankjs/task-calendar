@@ -1,4 +1,3 @@
-import { ENV } from "@task/env";
 import { Preload } from "../interface/preload";
 
 declare global {
@@ -8,7 +7,8 @@ declare global {
 }
 
 export async function setupBridge() {
-  if (ENV.VITE_APP_PLATFORM === "Electron") {
+  // @ts-expect-error typescript foolish
+  if (VITE_APP_PLATFORM === "Electron") {
     // Electron init bridge in src/main/preload.ts
     return;
   }

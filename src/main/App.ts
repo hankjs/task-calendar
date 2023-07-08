@@ -5,32 +5,34 @@ import { PluginManager } from "./plugins/PluginManager";
 import { MainWindow } from "./windows/MainWindow";
 import { WindowManager } from "./windows/WindowManager";
 import { setting } from "./setting/Setting";
+import { logger } from "@task/ipc/main";
 
 export class App {
-    #windowManager = new WindowManager();
-    #pluginManager = new PluginManager();
+  #windowManager = new WindowManager();
+  #pluginManager = new PluginManager();
 
-    constructor() {
-        app.on("browser-window-created", (e, win) =>
-            this.onBrowserWindowCreated(e, win)
-        );
+  constructor() {
+    app.on("browser-window-created", (e, win) =>
+      this.onBrowserWindowCreated(e, win)
+    );
 
-        app.whenReady().then(() => this.onReady());
-        app.on("will-quit", () => this.onWillQuit());
-    }
+    app.whenReady().then(() => this.onReady());
+    app.on("will-quit", () => this.onWillQuit());
+  }
 
-    onReady() {
-        setting.load();
-        IPCRegister();
+  onReady() {
+    setting.load();
+    IPCRegister();
+    logger.log("info", "Electron start");
 
-        this.#windowManager.push(new MainWindow());
+    this.#windowManager.push(new MainWindow());
 
-        CommonWindowEvent.listen();
-    }
+    CommonWindowEvent.listen();
+  }
 
-    onWillQuit() {
-        this.#pluginManager.clear();
-    }
+  onWillQuit() {
+    this.#pluginManager.clear();
+  }
 
-    onBrowserWindowCreated(e: Event, win: BrowserWindow) {}
+  onBrowserWindowCreated(e: Event, win: BrowserWindow) {}
 }

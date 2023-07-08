@@ -3,9 +3,10 @@ import "./assets/styles/index.scss";
 import "./assets/icon/iconfont.css";
 import App from "./App.vue";
 import { router } from "./router";
-import { createPinia } from "pinia";
-import { setupBridge } from "@task/ipc/renderer";
+import { setupPinia } from "./store";
 
-setupBridge();
+const app = createApp(App);
 
-const app = createApp(App).use(createPinia()).use(router).mount("#app");
+setupPinia(app);
+app.use(router);
+app.mount("#app");

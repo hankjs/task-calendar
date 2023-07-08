@@ -30,6 +30,5 @@
   "include": [
     "**/typings/**/*.d.ts",
     "src/main/**/*.ts",
-    "src/main/**/*.d.ts", "packages/share/src/Accelerator.ts", "packages/config/src/window.ts",
   ],
 }

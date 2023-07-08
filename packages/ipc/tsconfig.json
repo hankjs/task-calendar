@@ -14,18 +14,17 @@
       "DOM"
     ],
     "types": [
-      "vite/client",
-      "@task/env"
     ],
     "skipLibCheck": true,
     "noEmit": false,
-    "rootDir": "./",
-    "baseUrl": "./",
+    "rootDir": "../../",
+    "baseUrl": "./"
   },
   "include": [
+    "**/typings/**.d.ts",
     "main/**/*.ts",
     "renderer/**/*.ts",
-    "interface/**/*.ts",
+    "interface/**/*.ts"
   ],
-  "exclude": []
+  "exclude": ["node_modules", "dist"]
 }

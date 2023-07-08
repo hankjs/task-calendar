@@ -1,13 +1,12 @@
-<script>
-import TimerWorker from '@/utils/timer.worker.js'
-import appAudio from '@/components/Audio'
-import appTrayIcon from '@/components/TrayIcon'
-import appTimerController from '@/components/timer/Timer-controller'
-import appTimerDial from '@/components/timer/Timer-dial'
-import appTimerFooter from '@/components/timer/Timer-footer'
-import { EventBus } from '@/utils/EventBus'
-import { logger } from '@/utils/logger'
-import { ipcRenderer } from 'electron'
+<script lang="ts">
+import TimerWorker from "@/worker/timer.js?worker";
+import appAudio from "@/components/Audio.vue";
+import appTrayIcon from "@/components/TrayIcon.vue";
+import appTimerController from "@/components/timer/Timer-controller.vue";
+import appTimerDial from "@/components/timer/Timer-dial.vue";
+import appTimerFooter from "@/components/timer/Timer-footer.vue";
+import { EventBus } from "@/utils/EventBus";
+import { logger } from "@/utils/logger";
 
 export default {
   components: {
@@ -15,7 +14,7 @@ export default {
     appTrayIcon,
     appTimerController,
     appTimerDial,
-    appTimerFooter
+    appTimerFooter,
   },
 
   data() {
@@ -24,233 +23,233 @@ export default {
       minutes: 1,
       timerActive: false,
       timerStarted: false,
-      timerWorker: null
-    }
+      timerWorker: null,
+    };
   },
 
   computed: {
     // store getters
     currentRound() {
-      return this.$store.getters.currentRound
+      return this.$store.getters.currentRound;
     },
 
     currentRoundDisplay() {
-      if (this.currentRound === 'work') {
-        return 'focus round'
-      } else if (this.currentRound === 'short-break') {
-        return 'short break'
-      } else if (this.currentRound === 'long-break') {
-        return 'long break'
+      if (this.currentRound === "work") {
+        return "focus round";
+      } else if (this.currentRound === "short-break") {
+        return "short break";
+      } else if (this.currentRound === "long-break") {
+        return "long break";
       }
     },
 
     timeLongBreak() {
-      return this.$store.getters.timeLongBreak
+      return this.$store.getters.timeLongBreak;
     },
 
     timeShortBreak() {
-      return this.$store.getters.timeShortBreak
+      return this.$store.getters.timeShortBreak;
     },
 
     timeWork() {
-      return this.$store.getters.timeWork
+      return this.$store.getters.timeWork;
     },
 
     // local
     prettyMinutes() {
-      return this.minutes + ':00'
+      return this.minutes + ":00";
     },
 
     prettyTime() {
-      return `${this.timeRemaining.remainingMinutes}:${this.timeRemaining.remainingSeconds}`
+      return `${this.timeRemaining.remainingMinutes}:${this.timeRemaining.remainingSeconds}`;
     },
 
     timeElapsed() {
-      const time = this.currentTime
-      const minutes = Math.floor(time / 60)
-      const seconds = time - minutes * 60
+      const time = this.currentTime;
+      const minutes = Math.floor(time / 60);
+      const seconds = time - minutes * 60;
       return {
         minutes,
-        seconds
-      }
+        seconds,
+      };
     },
 
     timeRemaining() {
-      const minutes = this.minutes
-      const time = this.currentTime
-      const elapsedMinutes = Math.floor(time / 60)
-      const elapsedSeconds = time - elapsedMinutes * 60
-      const remainingSeconds = this.formatTimeDouble(60 - elapsedSeconds)
-      let remainingMinutes = minutes - elapsedMinutes
+      const minutes = this.minutes;
+      const time = this.currentTime;
+      const elapsedMinutes = Math.floor(time / 60);
+      const elapsedSeconds = time - elapsedMinutes * 60;
+      const remainingSeconds = this.formatTimeDouble(60 - elapsedSeconds);
+      let remainingMinutes = minutes - elapsedMinutes;
 
       if (elapsedSeconds > 0) {
-        remainingMinutes -= 1
+        remainingMinutes -= 1;
       }
 
       return {
         remainingMinutes,
-        remainingSeconds
-      }
-    }
+        remainingSeconds,
+      };
+    },
   },
 
   methods: {
     formatTimeDouble(time) {
       if (time === 60) {
-        return '00'
+        return "00";
       } else if (time < 10) {
-        return `0${time}`
+        return `0${time}`;
       } else {
-        return time
+        return time;
       }
     },
 
     handleMessage(message) {
       switch (message.data.event) {
-        case 'complete':
-          EventBus.$emit('timer-completed')
-          break
-        case 'pause':
-          EventBus.$emit('timer-paused')
-          ipcRenderer.send('roundChange', 'paused')
-          break
-        case 'reset':
-          EventBus.$emit('timer-reset')
-          break
-        case 'resume':
-          EventBus.$emit('timer-started')
-          this.currentTime = message.data.elapsed
-          ipcRenderer.send('roundChange', this.$store.getters.currentRound)
-          break
-        case 'start':
-          EventBus.$emit('timer-started')
-          this.currentTime = message.data.elapsed
-          logger.info(`${this.currentRoundDisplay} round started`)
-          ipcRenderer.send('roundChange', this.$store.getters.currentRound)
-          break
-        case 'tick':
-          this.currentTime = message.data.elapsed
-          EventBus.$emit('timer-tick', {
+        case "complete":
+          EventBus.$emit("timer-completed");
+          break;
+        case "pause":
+          EventBus.$emit("timer-paused");
+          ipcRenderer.send("roundChange", "paused");
+          break;
+        case "reset":
+          EventBus.$emit("timer-reset");
+          break;
+        case "resume":
+          EventBus.$emit("timer-started");
+          this.currentTime = message.data.elapsed;
+          ipcRenderer.send("roundChange", this.$store.getters.currentRound);
+          break;
+        case "start":
+          EventBus.$emit("timer-started");
+          this.currentTime = message.data.elapsed;
+          logger.info(`${this.currentRoundDisplay} round started`);
+          ipcRenderer.send("roundChange", this.$store.getters.currentRound);
+          break;
+        case "tick":
+          this.currentTime = message.data.elapsed;
+          EventBus.$emit("timer-tick", {
             elapsed: message.data.elapsed,
-            total: message.data.totalSeconds
-          })
-          break
+            total: message.data.totalSeconds,
+          });
+          break;
         default:
-          break
+          break;
       }
     },
 
     initTimer() {
       switch (this.currentRound) {
-        case 'work':
-          this.minutes = this.timeWork
-          this.createTimer(this.timeWork)
-          break
-        case 'short-break':
-          this.minutes = this.timeShortBreak
-          this.createTimer(this.timeShortBreak)
-          break
-        case 'long-break':
-          this.minutes = this.timeLongBreak
-          this.createTimer(this.timeLongBreak)
-          break
+        case "work":
+          this.minutes = this.timeWork;
+          this.createTimer(this.timeWork);
+          break;
+        case "short-break":
+          this.minutes = this.timeShortBreak;
+          this.createTimer(this.timeShortBreak);
+          break;
+        case "long-break":
+          this.minutes = this.timeLongBreak;
+          this.createTimer(this.timeLongBreak);
+          break;
         default:
-          this.createTimer(25)
-          break
+          this.createTimer(25);
+          break;
       }
     },
 
     createTimer(min) {
-      if (!this.timerWorker) return
-      this.timerWorker.postMessage({ event: 'create', min })
+      if (!this.timerWorker) return;
+      this.timerWorker.postMessage({ event: "create", min });
     },
 
     pauseTimer() {
-      if (!this.timerWorker) return
-      this.timerWorker.postMessage({ event: 'pause' })
-      this.timerActive = !this.timerActive
-      logger.info(`${this.currentRoundDisplay} round paused`)
+      if (!this.timerWorker) return;
+      this.timerWorker.postMessage({ event: "pause" });
+      this.timerActive = !this.timerActive;
+      logger.info(`${this.currentRoundDisplay} round paused`);
     },
 
     resetTimer() {
-      if (!this.timerWorker) return
-      this.timerWorker.postMessage({ event: 'reset' })
-      this.timerActive = !this.timerActive
-      this.timerStarted = false
+      if (!this.timerWorker) return;
+      this.timerWorker.postMessage({ event: "reset" });
+      this.timerActive = !this.timerActive;
+      this.timerStarted = false;
     },
 
     resumeTimer() {
-      if (!this.timerWorker) return
-      this.timerWorker.postMessage({ event: 'resume' })
-      this.timerActive = true
+      if (!this.timerWorker) return;
+      this.timerWorker.postMessage({ event: "resume" });
+      this.timerActive = true;
     },
 
     startTimer() {
-      if (!this.timerWorker) return
-      this.timerWorker.postMessage({ event: 'start' })
-      this.timerActive = true
-      this.timerStarted = true
+      if (!this.timerWorker) return;
+      this.timerWorker.postMessage({ event: "start" });
+      this.timerActive = true;
+      this.timerStarted = true;
     },
     toggleTimer() {
       if (this.timerActive) {
-        this.pauseTimer()
+        this.pauseTimer();
       } else {
-        this.startTimer()
+        this.startTimer();
       }
-    }
+    },
   },
 
   mounted() {
-    this.timerWorker = new TimerWorker()
-    this.timerWorker.addEventListener('message', this.handleMessage)
+    this.timerWorker = new TimerWorker();
+    this.timerWorker.addEventListener("message", this.handleMessage);
 
-    this.initTimer()
+    this.initTimer();
 
-    EventBus.$on('timer-init', opts => {
+    EventBus.$on("timer-init", (opts) => {
       // clear previous timers
-      this.resetTimer()
-      this.initTimer()
+      this.resetTimer();
+      this.initTimer();
       if (opts.auto) {
         setTimeout(() => {
-          this.startTimer()
-        }, 1500)
+          this.startTimer();
+        }, 1500);
       } else {
-        this.timerActive = false
+        this.timerActive = false;
       }
-    })
+    });
 
-    EventBus.$on('call-timer-reset', () => {
-      this.resetTimer()
-      logger.info(`${this.currentRoundDisplay} round reset`)
-    })
+    EventBus.$on("call-timer-reset", () => {
+      this.resetTimer();
+      logger.info(`${this.currentRoundDisplay} round reset`);
+    });
 
-    EventBus.$on('call-timer-toggle', () => {
-      logger.info(`${this.currentRoundDisplay} toggle`)
-      this.toggleTimer()
-    })
+    EventBus.$on("call-timer-toggle", () => {
+      logger.info(`${this.currentRoundDisplay} toggle`);
+      this.toggleTimer();
+    });
 
-    EventBus.$on('call-timer-skip', () => {
-      EventBus.$emit('timer-completed')
-    })
+    EventBus.$on("call-timer-skip", () => {
+      EventBus.$emit("timer-completed");
+    });
 
-    ipcRenderer.on('event-bus', (event, arg) => {
+    ipcRenderer.on("event-bus", (event, arg) => {
       // Event Bus events from main
-      logger.info(`event-bus ${arg}`)
-      EventBus.$emit(arg)
-    })
+      logger.info(`event-bus ${arg}`);
+      EventBus.$emit(arg);
+    });
 
     // Bind event listener to Space key
     window.addEventListener(
-      'keypress',
-      e => {
-        if (e.code === 'Space') {
-          this.toggleTimer()
+      "keypress",
+      (e) => {
+        if (e.code === "Space") {
+          this.toggleTimer();
         }
       },
       true
-    )
-  }
-}
+    );
+  },
+};
 </script>
 
 <template>
@@ -408,7 +407,7 @@ export default {
 }
 
 .Dial-time {
-  font-family: 'RobotoMono', monospace;
+  font-family: "RobotoMono", monospace;
   font-size: 46px;
   margin: 0;
   position: absolute;

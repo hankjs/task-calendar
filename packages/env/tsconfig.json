@@ -14,22 +14,15 @@
       "DOM"
     ],
     "types": [
-      "lodash-es",
-      "vite/client"
     ],
     "skipLibCheck": true,
     "noEmit": false,
     "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "@/*": [
-        "src/renderer/*"
-      ]
-    }
+    "baseUrl": "./"
   },
   "include": [
-    "**/typings/**/*.d.ts",
-    "src/renderer/**/*.ts",
-    "src/renderer/**/*.vue"
-  ]
+    "src/**/*.ts",
+    "typings/**/*.d.ts"
+  ],
+  "exclude": []
 }

@@ -1,3 +1,4 @@
+import * as path from "path";
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { devPlugin, getReplacer } from "./plugins/devPlugin";
@@ -26,6 +27,11 @@ export default defineConfig(({ command, mode }) => {
   return {
     define: defineStringify(defines),
     plugins: [optimizer(getReplacer()), devPlugin(pluginOptions), vue()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src/renderer"),
+      },
+    },
     build: {
       rollupOptions: {
         plugins: [buildPlugin(pluginOptions)],
