@@ -1,7 +1,40 @@
 <script lang="ts" setup>
 import { getBridge } from "@/bridge";
-import { Accelerator } from "@task/share";
+import { Accelerator, Bus } from "@task/share";
 import { ref } from "vue";
+
+const worker = new Worker(new URL("@/worker/timer.js", import.meta.url));
+worker.postMessage({ event: "create", min: 1 });
+worker.addEventListener("message", (message) => {
+    switch (message.data.event) {
+        case "complete":
+            Bus.emit("timer-completed");
+            logger.info("completed");
+            break;
+        case "pause":
+            Bus.emit("timer-paused");
+            break;
+        case "reset":
+            Bus.emit("timer-reset");
+            break;
+        case "resume":
+            Bus.emit("timer-started");
+            break;
+        case "start":
+            Bus.emit("timer-started");
+            logger.info("${this.currentRoundDisplay} round started");
+            break;
+        case "tick":
+            logger.info("tick");
+            Bus.emit("timer-tick", {
+                elapsed: message.data.elapsed,
+                total: message.data.totalSeconds,
+            });
+            break;
+        default:
+            break;
+    }
+});
 
 const id = ref<number | null>(null);
 const accelerator: Accelerator.Pattern = `${Accelerator.Modifier.Ctrl}+${Accelerator.Modifier.Shift}+${Accelerator.Key.KeyA}`;
@@ -16,14 +49,11 @@ getBridge("electron").then((electron) => {
 });
 
 async function onClick() {
+    worker.postMessage({ event: "start" });
     const callback = async (event: any, accelerator: string) => {
-        logger.info(event, accelerator);
         logger.info("CurrentProcessId", id);
     };
-    const registered = await globalShortcut.register(
-        accelerator,
-        callback
-    );
+    const registered = await globalShortcut.register(accelerator, callback);
     logger.info("registered", registered);
 }
 </script>

@@ -5,13 +5,14 @@ class EventBus {
 
   constructor() { }
 
-  emit(eventName: string, data: any) {
+  emit(eventName: string, data?: any) {
     if (this.events[eventName]) {
       this.events[eventName].forEach(function (fn) {
         fn(data);
       });
     }
   }
+
   on(eventName: string, fn: Fn) {
     this.events[eventName] = this.events[eventName] || [];
     this.events[eventName].push(fn);
