@@ -7,35 +7,35 @@ import { buildPlugin } from "./plugins/buildPlugin";
 import { defineStringify } from "./plugins/helpers/defines";
 
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  const defines = {
-    NODE_ENV: env.NODE_ENV,
-    __DEV__: env.NODE_ENV === "development",
-    VITE_APP_PLATFORM: "Electron",
-  };
+    const env = loadEnv(mode, process.cwd(), "");
+    const defines = {
+        NODE_ENV: env.NODE_ENV,
+        __DEV__: env.NODE_ENV === "development",
+        VITE_APP_PLATFORM: "Electron",
+    };
 
-  for (const key in env) {
-    if (key.toUpperCase().startsWith("VITE")) {
-      defines[key] = env[key];
+    for (const key in env) {
+        if (key.toUpperCase().startsWith("VITE")) {
+            defines[key] = env[key];
+        }
     }
-  }
 
-  const pluginOptions = {
-    defines,
-  };
+    const pluginOptions = {
+        defines,
+    };
 
-  return {
-    define: defineStringify(defines),
-    plugins: [optimizer(getReplacer()), devPlugin(pluginOptions), vue()],
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "src/renderer"),
-      },
-    },
-    build: {
-      rollupOptions: {
-        plugins: [buildPlugin(pluginOptions)],
-      },
-    },
-  };
+    return {
+        define: defineStringify(defines),
+        plugins: [optimizer(getReplacer()), devPlugin(pluginOptions), vue()],
+        resolve: {
+            alias: {
+                "@": path.resolve(__dirname, "src/renderer"),
+            },
+        },
+        build: {
+            rollupOptions: {
+                plugins: [buildPlugin(pluginOptions)],
+            },
+        },
+    };
 });

@@ -3,7 +3,7 @@ import { getBridge } from "@/bridge";
 import { Accelerator, Bus } from "@task/share";
 import { ref } from "vue";
 
-const worker = new Worker(new URL("@/worker/timer.js", import.meta.url));
+const worker = new Worker(new URL("@/worker/timer.ts", import.meta.url));
 worker.postMessage({ event: "create", min: 1 });
 worker.addEventListener("message", (message) => {
     switch (message.data.event) {

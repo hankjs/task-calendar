@@ -1,5 +1,14 @@
 class Timer extends EventTarget {
-    constructor(min) {
+    time: number;
+    totalSeconds: number;
+    private _complete: Event;
+    private _pause: Event;
+    private _reset: Event;
+
+    timerInt?: any;
+
+    constructor(min: number) {
+        console.log("constructor");
         super();
         this.time = 0;
         this.totalSeconds = min * 60;
@@ -10,6 +19,7 @@ class Timer extends EventTarget {
     }
 
     start() {
+        console.log("start");
         if (!this.timerInt) {
             this.timerInt = setInterval(() => {
                 this.time += 1;
@@ -66,7 +76,12 @@ class Timer extends EventTarget {
     }
 }
 
-let timer;
+interface TimerEvent extends Event {
+    event: string;
+    detail: Timer;
+}
+
+let timer: Timer;
 
 self.onmessage = function (msg) {
     switch (msg.data.event) {
@@ -92,13 +107,13 @@ self.onmessage = function (msg) {
 
 // External event handlers
 
-function handleCreate(min) {
+function handleCreate(min: number) {
     timer = new Timer(min);
     timer.addEventListener("complete", handleTimerComplete);
     timer.addEventListener("pause", handleTimerPause);
     timer.addEventListener("reset", handleTimerReset);
-    timer.addEventListener("start", handleTimerStart);
-    timer.addEventListener("tick", handleTimerTick);
+    timer.addEventListener("start", handleTimerStart as EventListener);
+    timer.addEventListener("tick", handleTimerTick as EventListener);
 }
 
 function handlePause() {
@@ -135,7 +150,7 @@ function handleTimerReset() {
     self.postMessage({ event: "reset" });
 }
 
-function handleTimerStart(event) {
+function handleTimerStart(event: TimerEvent) {
     self.postMessage({
         event: "start",
         elapsed: event.detail.time,
@@ -143,7 +158,7 @@ function handleTimerStart(event) {
     });
 }
 
-function handleTimerTick(event) {
+function handleTimerTick(event: TimerEvent) {
     self.postMessage({
         event: "tick",
         elapsed: event.detail.time,

@@ -41,6 +41,9 @@ importers:
       fs-extra:
         specifier: ^11.1.0
         version: 11.1.0
+      happy-dom:
+        specifier: ^10.0.3
+        version: 10.0.3
       install:
         specifier: ^0.13.0
         version: 0.13.0
@@ -70,7 +73,7 @@ importers:
         version: 1.4.2
       vitest:
         specifier: ^0.33.0
-        version: 0.33.0(sass@1.58.0)
+        version: 0.33.0(happy-dom@10.0.3)(sass@1.58.0)
       vue:
         specifier: ^3.2.45
         version: 3.2.45
@@ -1444,6 +1447,10 @@ packages:
       which: 2.0.2
     dev: true
 
+  /css.escape@1.5.1:
+    resolution: {integrity: sha1-QuJ9T6BK4y+TGktNQZH6nN3ul8s=}
+    dev: true
+
   /csstype@2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
     dev: true
@@ -1711,6 +1718,11 @@ packages:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
     dependencies:
       once: 1.4.0
+    dev: true
+
+  /entities@4.5.0:
+    resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
+    engines: {node: '>=0.12'}
     dev: true
 
   /env-paths@2.2.1:
@@ -2064,6 +2076,17 @@ packages:
 
   /graceful-readlink@1.0.1:
     resolution: {integrity: sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=}
+    dev: true
+
+  /happy-dom@10.0.3:
+    resolution: {integrity: sha512-WkCP+Z5fX6U5PY+yHP3ElV5D9PoxRAHRWPFq3pG9rg/6Hjf5ak7dozAgSCywsTRUq2qfa8vV8OQvUy5pRXy8EQ==}
+    dependencies:
+      css.escape: 1.5.1
+      entities: 4.5.0
+      iconv-lite: 0.6.3
+      webidl-conversions: 7.0.0
+      whatwg-encoding: 2.0.0
+      whatwg-mimetype: 3.0.0
     dev: true
 
   /has-flag@4.0.0:
@@ -3657,7 +3680,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest@0.33.0(sass@1.58.0):
+  /vitest@0.33.0(happy-dom@10.0.3)(sass@1.58.0):
     resolution: {integrity: sha512-1CxaugJ50xskkQ0e969R/hW47za4YXDUfWJDxip1hwbnhUjYolpfUn2AMOulqG/Dtd9WYAtkHmM/m3yKVrEejQ==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -3701,6 +3724,7 @@ packages:
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
+      happy-dom: 10.0.3
       local-pkg: 0.4.3
       magic-string: 0.30.1
       pathe: 1.1.1
@@ -3777,6 +3801,23 @@ packages:
     resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
     dependencies:
       defaults: 1.0.4
+    dev: true
+
+  /webidl-conversions@7.0.0:
+    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
+    engines: {node: '>=12'}
+    dev: true
+
+  /whatwg-encoding@2.0.0:
+    resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
+    engines: {node: '>=12'}
+    dependencies:
+      iconv-lite: 0.6.3
+    dev: true
+
+  /whatwg-mimetype@3.0.0:
+    resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
+    engines: {node: '>=12'}
     dev: true
 
   /which@2.0.2:
