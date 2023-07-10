@@ -1,22 +1,26 @@
 import * as VueRouter from "vue-router";
 
 export let router = VueRouter.createRouter({
-  history: VueRouter.createMemoryHistory(),
-  routes: [
-    { path: "/", redirect: "/WindowMain/List" },
-    {
-      path: "/WindowMain",
-      component: () => import("./Window/WindowMain.vue"),
-      children: [
+    history: VueRouter.createMemoryHistory(),
+    routes: [
+        { path: "/", redirect: "/window-main" },
         {
-          path: "List",
-          component: () => import("./Window/WindowMain/List.vue"),
+            path: "/window-main",
+            component: () => import("./Window/window-main.vue"),
+            children: [
+                {
+                    path: "",
+                    component: () => import("./pages/timer.vue"),
+                },
+                {
+                    path: "list",
+                    component: () => import("./pages/list.vue"),
+                },
+            ],
         },
-      ],
-    },
-    {
-      path: "/:catchAll(.*)",
-      redirect: "/WindowMain/List",
-    },
-  ],
+        {
+            path: "/:catchAll(.*)",
+            redirect: "/window-main/list",
+        },
+    ],
 });
