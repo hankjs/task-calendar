@@ -1,14 +1,12 @@
 class Timer extends EventTarget {
-    time: number;
-    totalSeconds: number;
-    private _complete: Event;
-    private _pause: Event;
-    private _reset: Event;
+    time;
+    totalSeconds;
+    _complete;
+    _pause;
+    _reset;
+    timerInt;
 
-    timerInt?: any;
-
-    constructor(min: number) {
-        console.log("constructor");
+    constructor(min) {
         super();
         this.time = 0;
         this.totalSeconds = min * 60;
@@ -19,7 +17,6 @@ class Timer extends EventTarget {
     }
 
     start() {
-        console.log("start");
         if (!this.timerInt) {
             this.timerInt = setInterval(() => {
                 this.time += 1;
@@ -76,12 +73,7 @@ class Timer extends EventTarget {
     }
 }
 
-interface TimerEvent extends Event {
-    event: string;
-    detail: Timer;
-}
-
-let timer: Timer;
+let timer;
 
 self.onmessage = function (msg) {
     switch (msg.data.event) {
@@ -107,13 +99,13 @@ self.onmessage = function (msg) {
 
 // External event handlers
 
-function handleCreate(min: number) {
+function handleCreate(min) {
     timer = new Timer(min);
     timer.addEventListener("complete", handleTimerComplete);
     timer.addEventListener("pause", handleTimerPause);
     timer.addEventListener("reset", handleTimerReset);
-    timer.addEventListener("start", handleTimerStart as EventListener);
-    timer.addEventListener("tick", handleTimerTick as EventListener);
+    timer.addEventListener("start", handleTimerStart);
+    timer.addEventListener("tick", handleTimerTick);
 }
 
 function handlePause() {
@@ -150,7 +142,7 @@ function handleTimerReset() {
     self.postMessage({ event: "reset" });
 }
 
-function handleTimerStart(event: TimerEvent) {
+function handleTimerStart(event) {
     self.postMessage({
         event: "start",
         elapsed: event.detail.time,
@@ -158,7 +150,7 @@ function handleTimerStart(event: TimerEvent) {
     });
 }
 
-function handleTimerTick(event: TimerEvent) {
+function handleTimerTick(event) {
     self.postMessage({
         event: "tick",
         elapsed: event.detail.time,
