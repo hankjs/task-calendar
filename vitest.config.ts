@@ -7,6 +7,7 @@ export default defineConfig({
         deps: {
             inline: ["jsdom-worker"],
         },
+        setupFiles: ["./vitest.setup.ts"]
     },
     resolve: {
         alias: {

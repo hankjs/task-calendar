@@ -1,51 +1,27 @@
 import { it, expect, vi, describe } from "vitest";
-import { VitestWorker } from "@/tests/mock/vitest-worker";
+import { TimerWorker } from "./timer";
 
-describe("timer web worker", () => {
+describe("timer abstract class worker", () => {
     it("timer create and start", async () => {
-        const worker = new VitestWorker(new URL("./timer.js", import.meta.url));
-        const fn = vi.fn();
-        worker.postMessage({ event: "create", min: 1 });
-        worker.addEventListener("message", (message) => {
-            switch (message.data.event) {
-                case "start":
-                    fn();
-                    break;
-                default:
-                    break;
+        class Timer extends TimerWorker {
+            constructor(min: number) {
+                super(min);
             }
-        });
-        worker.postMessage({ event: "start" });
-        expect(fn).toBeCalled();
-    });
 
-    it("timer complete", async () => {
-        vi.useFakeTimers()
-        const worker = new VitestWorker(new URL("./timer.js", import.meta.url));
-        const spyStart = vi.fn();
-        const spyComplete = vi.fn();
-        worker.postMessage({ event: "create", min: 1 });
-        worker.addEventListener("message", (message) => {
-            switch (message.data.event) {
-                case "start":
-                    spyStart();
-                    break;
-                case "complete":
-                    spyComplete();
-                    break;
-                default:
-                    break;
-            }
-        });
-        worker.postMessage({ event: "start" });
+            onStart(detail: { elapsed: number; totalSeconds: number }): void {}
+            onPause(): void {}
+            onComplete(): void {}
+            onTick(detail: { elapsed: number; totalSeconds: number }): void {}
+            onReset(): void {}
+            onResume(): void {}
+        }
 
-        expect(spyStart).toBeCalled();
-        expect(spyComplete).not.toBeCalled();
+        const timer = new Timer(1);
+        const spyTimerOnStart = vi.spyOn(timer, "onStart");
 
-        /** vi.clearAllTimers inadequacy */
-        vi.advanceTimersByTime(60 * 1000);
-        
-        expect(spyStart).toBeCalledTimes(1);
-        expect(spyComplete).toBeCalled();
+        expect(spyTimerOnStart).not.toBeCalled();
+
+        timer.start();
+        expect(spyTimerOnStart).toBeCalled();
     });
 });

@@ -6,7 +6,7 @@ export let router = VueRouter.createRouter({
         { path: "/", redirect: "/window-main" },
         {
             path: "/window-main",
-            component: () => import("./Window/window-main.vue"),
+            component: () => import("./window/window-main.vue"),
             children: [
                 {
                     path: "",
