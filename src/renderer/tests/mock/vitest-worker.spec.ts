@@ -1,5 +1,5 @@
 import { it, expect, vi, describe } from "vitest";
-import { VitestWorker } from "./vitest-worker.mock";
+import { VitestWorker } from "./vitest-worker";
 
 describe("vitest web worker", () => {
     it("vitest worker ping pong", async () => {

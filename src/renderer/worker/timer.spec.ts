@@ -1,5 +1,5 @@
 import { it, expect, vi, describe } from "vitest";
-import { VitestWorker } from "@/tests/vitest-worker.mock";
+import { VitestWorker } from "@/tests/mock/vitest-worker";
 
 describe("timer web worker", () => {
     it("timer create and start", async () => {

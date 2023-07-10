@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import {normalize} from "path"
-import { MockWorker } from "./worker.mock";
+import { MockWorker } from "./worker";
 
 export class VitestWorker extends MockWorker {
     constructor(url: string | URL, options?: object) {
