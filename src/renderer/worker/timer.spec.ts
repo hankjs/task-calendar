@@ -1,10 +1,9 @@
 import { it, expect, vi, describe } from "vitest";
-import timerWorker from "@/worker/timer?raw";
-import { MockWorker } from "@/tests/worker.mock";
+import { VitestWorker } from "@/tests/vitest-worker.mock";
 
 describe("timer web worker", () => {
     it("timer create and start", async () => {
-        const worker = new MockWorker(timerWorker);
+        const worker = new VitestWorker(new URL("./timer.js", import.meta.url));
         const fn = vi.fn();
         worker.postMessage({ event: "create", min: 1 });
         worker.addEventListener("message", (message) => {
@@ -22,7 +21,7 @@ describe("timer web worker", () => {
 
     it("timer complete", async () => {
         vi.useFakeTimers()
-        const worker = new MockWorker(timerWorker);
+        const worker = new VitestWorker(new URL("./timer.js", import.meta.url));
         const spyStart = vi.fn();
         const spyComplete = vi.fn();
         worker.postMessage({ event: "create", min: 1 });
@@ -44,7 +43,7 @@ describe("timer web worker", () => {
         expect(spyComplete).not.toBeCalled();
 
         /** vi.clearAllTimers inadequacy */
-        vi.advanceTimersByTime(1000 * 60 * 1);
+        vi.advanceTimersByTime(60 * 1000);
         
         expect(spyStart).toBeCalledTimes(1);
         expect(spyComplete).toBeCalled();

@@ -18,6 +18,7 @@
     "@task/env": "workspace:^",
     "@task/ipc": "workspace:^",
     "@task/share": "workspace:^",
+    "@types/fs-extra": "^11.0.1",
     "@types/lodash-es": "^4.17.7",
     "@vitejs/plugin-vue": "^4.0.0",
     "electron": "^22.3.15",

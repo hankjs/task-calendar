@@ -25,10 +25,10 @@
       "src/*": [
         "src/*"
       ]
-    },
+    }
   },
   "include": [
     "**/typings/**/*.d.ts",
-    "src/main/**/*.ts",
-  ],
+    "src/main/**/*.ts"
+  ]
 }

@@ -15,7 +15,8 @@
     ],
     "types": [
       "lodash-es",
-      "vite/client"
+      "vite/client",
+      "fs-extra"
     ],
     "skipLibCheck": true,
     "noEmit": false,

@@ -1,10 +1,6 @@
 import mitt, { EventType, Handler } from "mitt";
-// @ts-expect-error
-import uuid from "uuid-v4";
-import fetch, { Response } from "node-fetch";
 
 // eslint-disable-next-line no-undef
-
 const self: any =
     /** @type {globalThis} */ typeof global === "object"
         ? global
