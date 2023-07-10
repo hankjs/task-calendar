@@ -3,7 +3,10 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     test: {
-        environment: "happy-dom",
+        environment: "jsdom",
+        deps: {
+            inline: ["jsdom-worker"],
+        },
     },
     resolve: {
         alias: {
