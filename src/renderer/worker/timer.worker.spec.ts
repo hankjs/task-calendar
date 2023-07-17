@@ -27,7 +27,7 @@ describe("timer web worker", () => {
         );
         const spyStart = vi.fn();
         const spyComplete = vi.fn();
-        worker.postMessage({ event: "create", min: 1 });
+        worker.postMessage({ event: "create", seconds: 1 });
         worker.addEventListener("message", (message) => {
             switch (message.data.event) {
                 case "start":
@@ -46,7 +46,7 @@ describe("timer web worker", () => {
         expect(spyComplete).not.toBeCalled();
 
         /** vi.clearAllTimers inadequacy */
-        vi.advanceTimersByTime(60 * 1000);
+        await vi.advanceTimersByTimeAsync(60 * 1000);
 
         expect(spyStart).toBeCalledTimes(1);
         expect(spyComplete).toBeCalled();
