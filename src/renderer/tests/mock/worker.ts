@@ -1,6 +1,5 @@
 import mitt, { EventType, Handler } from "mitt";
 
-// eslint-disable-next-line no-undef
 const self: any =
     /** @type {globalThis} */ typeof global === "object"
         ? global
@@ -8,7 +7,6 @@ const self: any =
         ? globalThis
         : this;
 
-// @ts-ignore
 if (!self.document) self.document = {};
 
 class Event {
@@ -18,12 +16,6 @@ class Event {
         this.type = type;
     }
 }
-// if (!self.document.createEvent) {
-//     self.document.createEvent = function (type) {
-//         let Ctor = global[type] || Event;
-//         return new Ctor(type);
-//     };
-// }
 
 export class MockWorker {
     private getScopeVar: any;

@@ -10,7 +10,7 @@ export let router = VueRouter.createRouter({
             children: [
                 {
                     path: "",
-                    component: () => import("./pages/timer.vue"),
+                    component: () => import("./pages/timer/index.vue"),
                 },
                 {
                     path: "list",

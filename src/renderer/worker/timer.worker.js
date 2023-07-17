@@ -6,10 +6,10 @@ class Timer extends EventTarget {
     _reset;
     timerInt;
 
-    constructor(min) {
+    constructor(seconds) {
         super();
         this.time = 0;
-        this.totalSeconds = min * 60;
+        this.totalSeconds = seconds;
 
         this._complete = new Event("complete");
         this._pause = new Event("pause");
@@ -21,8 +21,7 @@ class Timer extends EventTarget {
             this.timerInt = setInterval(() => {
                 this.time += 1;
                 if (this.time >= this.totalSeconds) {
-                    this.pause();
-                    this.dispatchEvent(this._complete);
+                    this.complete()
                 } else {
                     this.dispatchEvent(
                         new CustomEvent("tick", {
@@ -45,6 +44,11 @@ class Timer extends EventTarget {
         }
     }
 
+    complete() {
+        clearInterval(this.timerInt);
+        delete this.timerInt;
+        this.dispatchEvent(this._complete);
+    }
     pause() {
         clearInterval(this.timerInt);
         delete this.timerInt;
@@ -78,7 +82,7 @@ let timer;
 self.onmessage = function (msg) {
     switch (msg.data.event) {
         case "create":
-            handleCreate(msg.data.min);
+            handleCreate(msg.data.seconds);
             break;
         case "pause":
             handlePause();
@@ -99,12 +103,15 @@ self.onmessage = function (msg) {
 
 // External event handlers
 
-function handleCreate(min) {
-    timer = new Timer(min);
-    timer.addEventListener("complete", handleTimerComplete);
-    timer.addEventListener("pause", handleTimerPause);
-    timer.addEventListener("reset", handleTimerReset);
+function handleCreate(seconds) {
+    timer = new Timer(seconds);
     timer.addEventListener("start", handleTimerStart);
+    timer.addEventListener("pause", handleTimerPause);
+    timer.addEventListener("resume", handleTimerResume);
+    timer.addEventListener("complete", handleTimerComplete);
+
+    timer.addEventListener("reset", handleTimerReset);
+
     timer.addEventListener("tick", handleTimerTick);
 }
 
@@ -136,6 +143,10 @@ function handleTimerComplete() {
 
 function handleTimerPause() {
     self.postMessage({ event: "pause" });
+}
+
+function handleTimerResume() {
+    self.postMessage({ event: "resume" });
 }
 
 function handleTimerReset() {
