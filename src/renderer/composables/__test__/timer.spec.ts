@@ -1,7 +1,6 @@
 import { it, expect, vi, describe } from "vitest";
-import { useTimer, Status } from "./timer";
+import { useTimer, Status } from "../timer";
 import { useSetup } from "@/tests/component";
-import { unref } from "vue";
 import { TimerWorker } from "@/worker/timer-worker";
 
 describe("use timer WebWorker", () => {
