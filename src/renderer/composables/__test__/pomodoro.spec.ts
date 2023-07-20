@@ -1,6 +1,5 @@
-import { it, expect, vi, describe, afterAll } from "vitest";
+import { it, expect, vi, describe } from "vitest";
 import { Category, Status, usePomodoro } from "../pomodoro";
-import { useSetupHooks } from "@/tests/component";
 
 describe("Pomodoro", () => {
     it("创建一个番茄钟", () => {
@@ -8,9 +7,6 @@ describe("Pomodoro", () => {
 
         expect(timer).toBeDefined();
         expect(status.value).toBe(Category.Focus);
-        afterAll(() =>{
-            wrapper.unmount()
-        })
     });
 
     it("开始一个番茄钟", () => {
