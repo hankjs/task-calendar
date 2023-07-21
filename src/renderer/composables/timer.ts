@@ -10,8 +10,11 @@ export enum Status {
 }
 
 export function useTimer() {
-    const timer = shallowRef(new TimerWorker());
+    onUnmounted(() => {
+        timer.value.dispose();
+    });
 
+    const timer = shallowRef(new TimerWorker());
     const status = ref(Status.None);
 
     const onCreate = (handler: Handler<TimerEventMap["create"]>) => {
@@ -46,10 +49,6 @@ export function useTimer() {
 
     onComplete(() => {
         status.value = Status.Complete;
-    });
-
-    onUnmounted(() => {
-        timer.value.dispose();
     });
 
     return {

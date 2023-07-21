@@ -1,11 +1,17 @@
 import { it, expect, vi, describe } from "vitest";
 import { useTimer, Status } from "../timer";
-import { useSetup } from "@/tests/component";
-import { TimerWorker } from "@/worker/timer-worker";
+import { useSetupHooks } from "@/tests/component";
 
 describe("use timer WebWorker", () => {
     it("status create -> start -> complete", async () => {
-        const { timer, status } = useTimer();
+        const { $vm, timer, status } = useSetupHooks(() => {
+            const { timer, status } = useTimer();
+            return {
+                timer,
+                status,
+            };
+        });
+
         expect(status.value).toBe(Status.None);
 
         vi.useFakeTimers();
@@ -17,16 +23,14 @@ describe("use timer WebWorker", () => {
 
         await vi.advanceTimersByTimeAsync(1000);
         expect(status.value).toBe(Status.Complete);
+
+        $vm.unmount();
     });
 
     it("on[LifeCycle]", async () => {
-        const { wrapper } = useSetup(() => {
-            return {
-                ...useTimer(),
-            };
-        });
-        let {
-            timer: _timer,
+        const {
+            $vm,
+            timer,
             onCreate,
             onStart,
             onPause,
@@ -34,8 +38,11 @@ describe("use timer WebWorker", () => {
             onReset,
             onResume,
             onTick,
-        } = wrapper.vm as unknown as ReturnType<typeof useTimer>;
-        const timer = _timer as unknown as TimerWorker;
+        } = useSetupHooks(() => {
+            return {
+                ...useTimer(),
+            };
+        });
 
         const create = vi.fn();
         const start = vi.fn();
@@ -56,7 +63,7 @@ describe("use timer WebWorker", () => {
         onTick(tick);
 
         const totalSeconds = 3;
-        timer.create(totalSeconds);
+        timer.value.create(totalSeconds);
 
         expect(create).toBeCalledTimes(1);
         expect(start).toBeCalledTimes(0);
@@ -66,7 +73,7 @@ describe("use timer WebWorker", () => {
         expect(resume).toBeCalledTimes(0);
         expect(tick).toBeCalledTimes(0);
 
-        timer.start();
+        timer.value.start();
 
         expect(create).toBeCalledTimes(1);
         expect(start).lastCalledWith({
@@ -83,7 +90,7 @@ describe("use timer WebWorker", () => {
             totalSeconds,
         });
 
-        timer.pause();
+        timer.value.pause();
 
         expect(pause).toBeCalledTimes(1);
 
@@ -91,7 +98,7 @@ describe("use timer WebWorker", () => {
         // tick not called
         expect(tick).toBeCalledTimes(1);
 
-        timer.resume();
+        timer.value.resume();
 
         expect(start).toBeCalledTimes(2);
         expect(resume).toBeCalledTimes(1);
@@ -115,6 +122,6 @@ describe("use timer WebWorker", () => {
         expect(resume).toBeCalledTimes(1);
         expect(tick).toBeCalledTimes(2);
 
-        wrapper.unmount();
+        $vm.unmount();
     });
 });

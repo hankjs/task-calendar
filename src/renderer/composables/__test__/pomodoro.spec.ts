@@ -1,16 +1,17 @@
 import { it, expect, vi, describe } from "vitest";
 import { Category, Status, usePomodoro } from "../pomodoro";
+import { useSetupHooks } from "@/tests/component";
 
 describe("Pomodoro", () => {
-    it("创建一个番茄钟", () => {
-        const { timer, category: status } = usePomodoro();
+    it("初始类型是Focus", () => {
+        const { timer, category } = useSetupHooks(usePomodoro);
 
         expect(timer).toBeDefined();
-        expect(status.value).toBe(Category.Focus);
+        expect(category.value).toBe(Category.Focus);
     });
 
-    it("开始一个番茄钟", () => {
-        const { start, status } = usePomodoro();
+    it("启动番茄钟，状态变为Running", () => {
+        const { start, status } = useSetupHooks(usePomodoro);
 
         expect(status.value).toBe(Status.Pending);
 
@@ -18,8 +19,8 @@ describe("Pomodoro", () => {
         expect(status.value).toBe(Status.Running);
     });
 
-    it("运行中暂停", () => {
-        const { start, status, pause } = usePomodoro();
+    it("暂停运行中的番茄钟，状态变为Paused", () => {
+        const { start, status, pause } = useSetupHooks(usePomodoro);
 
         expect(status.value).toBe(Status.Pending);
 

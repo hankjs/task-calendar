@@ -14,12 +14,18 @@ export function useSetup<V>(setup: () => V) {
 
 export function useSetupHooks<V>(setup: () => V) {
     const comp = {
-        setup,
+        setup() {
+            const _ = setup()
+            return {
+                hooks: () => _
+            }
+        },
         render() {},
     };
 
-    const wrapper = mount(comp);
+    const $vm = mount(comp);
     return {
-        wrapper,
-    };
+        $vm,
+        ...($vm.vm.hooks as unknown as () => V)()
+    }
 }
