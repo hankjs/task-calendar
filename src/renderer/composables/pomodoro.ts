@@ -15,29 +15,58 @@ export enum Status {
     Paused,
 }
 
-export function usePomodoro() {
-    const { timer } = useTimer();
+type PomodoroProps = {
+    workRounds: number;
+    timeLongBreak: number;
+    timeShortBreak: number;
+    timeWork: number;
+};
+
+export function usePomodoro(
+    props: PomodoroProps = {
+        workRounds: 4,
+        timeLongBreak: 15,
+        timeShortBreak: 5,
+        timeWork: 25,
+    }
+) {
+    const { timer, onTick, onComplete } = useTimer();
     const category = shallowRef(Category.Focus);
     const status = shallowRef(Status.Pending);
+    const second = shallowRef(0);
 
     function start() {
         status.value = Status.Running;
+        timer.value.create(props.timeWork * 60 * 1000);
+        timer.value.start()
     }
 
     function pause() {
         status.value = Status.Paused;
     }
 
+    //#region Timer
+    onTick(({ elapsed }) => {
+        second.value = elapsed;
+    });
+
+    onComplete(() => {
+        status.value = Status.Pending;
+    });
+    //#endregion Timer
+
     return {
         //#region Field
         timer,
         category,
         status,
-        //#endregion
+
+        second,
+        //#endregion Field
 
         //#region Method
         start,
         pause,
-        //#endregion
+        //#endregion Method
     };
 }

@@ -30,4 +30,16 @@ describe("Pomodoro", () => {
         pause();
         expect(status.value).toBe(Status.Paused);
     });
+
+    it("运行一个25分钟的番茄钟", () => {
+        const { second, start } = useSetupHooks(usePomodoro);
+
+        vi.useFakeTimers();
+
+        start();
+        expect(second.value).toBe(0);
+
+        vi.advanceTimersByTime(3 * 1000);
+        expect(second.value).toBe(3);
+    });
 });
