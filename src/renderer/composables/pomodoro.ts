@@ -1,9 +1,13 @@
-import { ref, shallowRef, watch } from "vue";
+import { computed, ref, shallowRef, watch } from "vue";
 import { useTimer } from "./timer";
 
 export enum Category {
     /** 番茄钟 专注 */
     Focus,
+    /** 短休息 */
+    ShortBreak,
+    /** 长休息 */
+    LongBreak,
 }
 
 export enum Status {
@@ -34,21 +38,17 @@ export function usePomodoro(
     const category = shallowRef(Category.Focus);
     const status = shallowRef(Status.Pending);
     const seconds = shallowRef(0);
-    const minute = shallowRef(0);
-    const hours = shallowRef(0);
-
-    watch(seconds, (value) => {
-        minute.value = Math.floor(value / 60);
+    const minute = computed(() => {
+        return Math.floor(seconds.value / 60);
     });
-
-    watch(minute, (value) => {
-        hours.value = Math.floor(value / 60);
+    const hours = computed(() => {
+        return Math.floor(seconds.value / 60);
     });
 
     function start() {
         status.value = Status.Running;
         timer.value.create(props.timeWork * 60);
-        timer.value.start()
+        timer.value.start();
     }
 
     function pause() {
@@ -62,6 +62,10 @@ export function usePomodoro(
 
     onComplete(() => {
         status.value = Status.Pending;
+        const currentCategory = category.value;
+        if (currentCategory === Category.Focus) {
+            category.value = Category.ShortBreak;
+        }
     });
     //#endregion Timer
 

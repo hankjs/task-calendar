@@ -37,10 +37,14 @@ describe("Pomodoro", () => {
             seconds: second,
             minute,
             status,
+            category,
             start,
         } = useSetupHooks(usePomodoro);
 
         vi.useFakeTimers();
+
+        /** ===从Focus开始 */
+        expect(category.value).toBe(Category.Focus);
 
         start();
         expect(second.value).toBe(0);
@@ -52,14 +56,14 @@ describe("Pomodoro", () => {
 
         vi.advanceTimersByTime((60 - firstTick) * 1000);
         expect(second.value).toBe(60);
-        await nextTick();
         expect(minute.value).toBe(1);
 
+        /** ===完成一个Focus */
         vi.advanceTimersByTime(24 * 60 * 1000);
         // 最后一秒不跑，直接执行complete
         expect(second.value).toBe(25 * 60 - 1);
-        await nextTick();
         expect(minute.value).toBe(24);
         expect(status.value).toBe(Status.Pending);
+        expect(category.value).toBe(Category.ShortBreak);
     });
 });
