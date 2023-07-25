@@ -1,7 +1,6 @@
 import { it, expect, vi, describe } from "vitest";
 import { Category, PomodoroProps, Status, usePomodoro } from "../pomodoro";
 import { useSetupHooks } from "@/tests/component";
-import { nextTick } from "vue";
 
 describe("Pomodoro", () => {
     it("初始类型是Focus", () => {
@@ -33,13 +32,7 @@ describe("Pomodoro", () => {
     });
 
     it("运行一个25分钟的番茄钟", () => {
-        const {
-            seconds: second,
-            minute,
-            status,
-            category,
-            start,
-        } = useSetupHooks(usePomodoro);
+        const { elapsed, status, category, start } = useSetupHooks(usePomodoro);
 
         vi.useFakeTimers();
 
@@ -47,28 +40,26 @@ describe("Pomodoro", () => {
         expect(category.value).toBe(Category.Focus);
 
         start();
-        expect(second.value).toBe(0);
+        expect(elapsed.value).toBe(0);
         expect(status.value).toBe(Status.Running);
 
         const firstTick = 3;
         vi.advanceTimersByTime(firstTick * 1000);
-        expect(second.value).toBe(firstTick);
+        expect(elapsed.value).toBe(firstTick);
 
         vi.advanceTimersByTime((60 - firstTick) * 1000);
-        expect(second.value).toBe(60);
-        expect(minute.value).toBe(1);
+        expect(elapsed.value).toBe(60);
 
         /** ===完成一个Focus */
         vi.advanceTimersByTime(24 * 60 * 1000);
-        // 最后一秒不跑，直接执行complete
-        expect(second.value).toBe(25 * 60 - 1);
-        expect(minute.value).toBe(24);
+        // 执行完成 归零
+        expect(elapsed.value).toBe(0);
         expect(status.value).toBe(Status.Pending);
         expect(category.value).toBe(Category.ShortBreak);
     });
 
     it("运行一个轮回", () => {
-        const config: PomodoroProps = {
+        const config: Required<PomodoroProps> = {
             workRounds: 4,
             timeLongBreak: 15,
             timeShortBreak: 5,
@@ -114,12 +105,73 @@ describe("Pomodoro", () => {
             expect(category.value).toBe(Category.Focus);
         }
 
-        expect(round.value).toBe(0);
         expect(category.value).toBe(Category.Focus);
 
         expectRound(1, Category.ShortBreak);
         expectRound(2, Category.ShortBreak);
         expectRound(3, Category.ShortBreak);
         expectRound(4, Category.LongBreak, config.timeLongBreak);
+    });
+
+    it("hook 输出的时间是倒计时", () => {
+        const config: PomodoroProps = {
+            /* 25Hours */
+            timeWork: 25 * 60 * 60,
+        };
+        const { elapsed, totalSeconds, start, seconds, minute, hours } =
+            useSetupHooks(() => usePomodoro(config));
+
+        vi.useFakeTimers();
+
+        expect(hours.value).toBe(25);
+        expect(minute.value).toBe(0);
+        expect(seconds.value).toBe(0);
+
+        start();
+
+        vi.advanceTimersByTime(1000);
+        expect(hours.value).toBe(24);
+        expect(minute.value).toBe(59);
+        expect(seconds.value).toBe(59);
+
+        vi.advanceTimersByTime(1000);
+        expect(hours.value).toBe(24);
+        expect(minute.value).toBe(59);
+        expect(seconds.value).toBe(58);
+
+        // 1分钟 过去了
+        vi.advanceTimersByTime(60 * 1000);
+        expect(hours.value).toBe(24);
+        expect(minute.value).toBe(58);
+        expect(seconds.value).toBe(58);
+
+        // 1个小时 过去了
+        vi.advanceTimersByTime(60 * 60 * 1000);
+        expect(hours.value).toBe(23);
+        expect(minute.value).toBe(58);
+        expect(seconds.value).toBe(58);
+
+        // 23个小时 过去了
+        vi.advanceTimersByTime(23 * 60 * 60 * 1000);
+        expect(hours.value).toBe(0);
+        expect(minute.value).toBe(58);
+        expect(seconds.value).toBe(58);
+
+        // 58分钟 过去了
+        vi.advanceTimersByTime(58 * 60 * 1000);
+        expect(hours.value).toBe(0);
+        expect(minute.value).toBe(0);
+        expect(seconds.value).toBe(58);
+
+        // 58秒 过去了
+        vi.advanceTimersByTime(58 * 1000);
+
+        console.log("elapsed", elapsed.value);
+        console.log("totalSeconds", totalSeconds.value);
+
+        // 下一个是ShortBreak
+        expect(hours.value).toBe(0);
+        expect(minute.value).toBe(5);
+        expect(seconds.value).toBe(0);
     });
 });

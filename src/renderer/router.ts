@@ -12,15 +12,11 @@ export let router = VueRouter.createRouter({
                     path: "",
                     component: () => import("./pages/timer/index.vue"),
                 },
-                {
-                    path: "list",
-                    component: () => import("./pages/list.vue"),
-                },
             ],
         },
         {
             path: "/:catchAll(.*)",
-            redirect: "/window-main/list",
+            redirect: "/window-main",
         },
     ],
 });

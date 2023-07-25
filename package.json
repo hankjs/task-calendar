@@ -8,7 +8,7 @@
     "dev": "vite",
     "start": "npm run dev",
     "start:web": "vite --mode web",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc --noEmit --skipLibCheck && vite build",
     "preview": "vite preview",
     "test": "vitest"
   },
