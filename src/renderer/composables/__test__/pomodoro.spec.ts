@@ -1,5 +1,5 @@
 import { it, expect, vi, describe } from "vitest";
-import { Category, Status, usePomodoro } from "../pomodoro";
+import { Category, PomodoroProps, Status, usePomodoro } from "../pomodoro";
 import { useSetupHooks } from "@/tests/component";
 import { nextTick } from "vue";
 
@@ -32,7 +32,7 @@ describe("Pomodoro", () => {
         expect(status.value).toBe(Status.Paused);
     });
 
-    it("运行一个25分钟的番茄钟", async () => {
+    it("运行一个25分钟的番茄钟", () => {
         const {
             seconds: second,
             minute,
@@ -65,5 +65,61 @@ describe("Pomodoro", () => {
         expect(minute.value).toBe(24);
         expect(status.value).toBe(Status.Pending);
         expect(category.value).toBe(Category.ShortBreak);
+    });
+
+    it("运行一个轮回", () => {
+        const config: PomodoroProps = {
+            workRounds: 4,
+            timeLongBreak: 15,
+            timeShortBreak: 5,
+            timeWork: 25,
+        };
+        const { round, status, category, start } = useSetupHooks(() =>
+            usePomodoro(config)
+        );
+
+        vi.useFakeTimers();
+
+        function expectRound(
+            roundCount: number,
+            breakCategory: Category,
+            breakTime: number = config.timeShortBreak
+        ) {
+            /** ========
+             *  从Focus开始
+             * ========= */
+            start();
+            expect(round.value).toBe(roundCount);
+            expect(status.value).toBe(Status.Running);
+
+            /** ========
+             * 完成一个Focus, 类型换成ShortBreak
+             * ========= */
+            vi.advanceTimersByTime(config.timeWork * 1000);
+            expect(status.value).toBe(Status.Pending);
+            expect(category.value).toBe(breakCategory);
+
+            /** ========
+             * R1, ShortBreak开始
+             * ========= */
+            start();
+            expect(round.value).toBe(roundCount);
+            expect(status.value).toBe(Status.Running);
+
+            /** ========
+             * 完成一个ShortBreak, 类型换成Focus
+             * ========= */
+            vi.advanceTimersByTime(breakTime * 1000);
+            expect(status.value).toBe(Status.Pending);
+            expect(category.value).toBe(Category.Focus);
+        }
+
+        expect(round.value).toBe(0);
+        expect(category.value).toBe(Category.Focus);
+
+        expectRound(1, Category.ShortBreak);
+        expectRound(2, Category.ShortBreak);
+        expectRound(3, Category.ShortBreak);
+        expectRound(4, Category.LongBreak, config.timeLongBreak);
     });
 });
