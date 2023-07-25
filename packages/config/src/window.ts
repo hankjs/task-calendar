@@ -1,7 +1,7 @@
 import path from "path";
 
-export const WINDOW_CONFIG = {
-    frame: true,
+export const WINDOW_CONFIG: Electron.BrowserWindowConstructorOptions = {
+    frame: false,
     show: true,
     webPreferences: {
         /** preload.js load on runtime. dist/main.js load dist/preload.js */
@@ -12,7 +12,6 @@ export const WINDOW_CONFIG = {
         contextIsolation: true,
         webviewTag: true,
         spellcheck: false,
-        webPreferences: true,
         disableHtmlFullscreenWindowResize: true,
     },
 };

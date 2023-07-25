@@ -22,6 +22,8 @@
     "@types/lodash-es": "^4.17.7",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/test-utils": "^2.4.0",
+    "bootstrap-icons": "^1.10.5",
+    "dat.gui": "^0.7.9",
     "electron": "^22.3.15",
     "electron-builder": "^23.6.0",
     "electron-updater": "^5.3.0",

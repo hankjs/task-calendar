@@ -35,6 +35,12 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.0
         version: 2.4.0(vue@3.2.45)
+      bootstrap-icons:
+        specifier: ^1.10.5
+        version: 1.10.5
+      dat.gui:
+        specifier: ^0.7.9
+        version: 0.7.9
       electron:
         specifier: ^22.3.15
         version: 22.3.15
@@ -1142,6 +1148,10 @@ packages:
     dev: true
     optional: true
 
+  /bootstrap-icons@1.10.5:
+    resolution: {integrity: sha512-oSX26F37V7QV7NCE53PPEL45d7EGXmBgHG3pDpZvcRaKVzWMqIRL9wcqJUyEha1esFtM3NJzvmxFXDxjJYD0jQ==}
+    dev: true
+
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -1514,6 +1524,10 @@ packages:
 
   /csstype@2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
+    dev: true
+
+  /dat.gui@0.7.9:
+    resolution: {integrity: sha512-sCNc1OHobc+Erc1HqiswYgHdVNpSJUlk/Hz8vzOCsER7rl+oF/4+v8GXFUyCgtXpoCX6+bnmg07DedLvBLwYKQ==}
     dev: true
 
   /data-urls@4.0.0:
