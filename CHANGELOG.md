@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/zjhcn/task-calendar/compare/v0.0.2...v0.0.3) (2023-07-26)
+
+
+### ✨ Features
+
+* add notification ([ff4851d](https://github.com/zjhcn/task-calendar/commit/ff4851da5b5106bc1f9cf421571cbd15fc237324))
+
 ### 0.0.2 (2023-07-26)
 
 
