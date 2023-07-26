@@ -1,5 +1,6 @@
-import { computed, ref, shallowRef, watch } from "vue";
+import { computed, ref, shallowRef } from "vue";
 import { useTimer } from "./timer";
+import { useNotification } from "./notification";
 
 export enum Category {
     /** 番茄钟 专注 */
@@ -37,6 +38,7 @@ export function usePomodoro(props: PomodoroProps = {}) {
         timeShortBreak = 5 * 60,
         timeWork = 25 * 60,
     } = props;
+    const { notification } = useNotification();
     const { timer, onTick, onStart, onComplete } = useTimer();
     const round = ref(1);
     const category = shallowRef(Category.Focus);
@@ -54,6 +56,10 @@ export function usePomodoro(props: PomodoroProps = {}) {
     });
 
     function start() {
+        notification({
+            title: category.value,
+            body: `${category.value}开始`,
+        });
         status.value = Status.Running;
         elapsed.value = 0;
         const time =
@@ -80,6 +86,10 @@ export function usePomodoro(props: PomodoroProps = {}) {
     });
 
     onComplete(() => {
+        notification({
+            title: category.value,
+            body: `${category.value}结束`,
+        });
         status.value = Status.Pending;
         const currentCategory = category.value;
 

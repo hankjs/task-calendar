@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, Menu } from "electron";
 import { CommonWindowEvent } from "@task/ipc/main";
 import { WINDOW_CONFIG } from "@task/config/src/window";
 import { AppScheme } from "../protocol/app";
@@ -6,12 +6,12 @@ import { BaseWindow } from "./BaseWindow";
 import { setting } from "../setting/Setting";
 
 export class MainWindow extends BaseWindow {
-
     #browserWindow: BrowserWindow;
 
     constructor() {
         super();
         this.#browserWindow = new BrowserWindow(WINDOW_CONFIG);
+        Menu.setApplicationMenu(null);
     }
 
     loadURL() {
@@ -34,5 +34,4 @@ export class MainWindow extends BaseWindow {
     onCreate(e: Electron.Event): void {
         CommonWindowEvent.regWinEvent(this.#browserWindow);
     }
-
 }

@@ -1,21 +1,24 @@
 import { setupBridge } from "@task/ipc/renderer";
 import { Preload } from "@task/ipc/interface/preload";
+import { BRIDGE_KEY } from "@task/config/src/constant";
 
 type BridgeKey = keyof Preload.TCBridge;
 
 export function getBridge<K extends BridgeKey>(key?: K) {
-    return new Promise<
-        K extends BridgeKey ? Preload.TCBridge[K] : Preload.TCBridge
-    >(async (resolve) => {
-        if (!window.TCBridge) {
-            await setupBridge();
-        }
-        if (key) {
-            // @ts-expect-error typescript foolish
-            return resolve(window.TCBridge[key]);
-        }
+    return new Promise(
+        async (
+            resolve: (r: Preload.TCBridge[K] | Preload.TCBridge) => void
+        ) => {
+            if (!globalThis[BRIDGE_KEY]) {
+                await setupBridge();
+            }
+            if (key) {
+                return resolve(
+                    globalThis[BRIDGE_KEY][key] as Preload.TCBridge[K]
+                );
+            }
 
-        // @ts-expect-error typescript foolish
-        return resolve(window.TCBridge);
-    });
+            return resolve(globalThis[BRIDGE_KEY]);
+        }
+    );
 }

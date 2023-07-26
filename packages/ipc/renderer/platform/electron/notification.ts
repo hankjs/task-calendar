@@ -1,7 +1,11 @@
-import { Notification } from "electron";
+import { ipcRenderer } from "electron";
+import { IPCNotification } from "interface/types";
 
 export const NotificationBridge = {
-    notification() {
-        Notification;
+    notification(options: IPCNotification.Options) {
+        return ipcRenderer.invoke(
+            IPCNotification.Channel.notification,
+            options
+        );
     },
 };

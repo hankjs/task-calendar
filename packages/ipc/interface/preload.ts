@@ -1,6 +1,6 @@
 // import { IpcRendererEvent } from "electron";
 import type { Accelerator } from "@task/share";
-import { IPCLogger } from "./types";
+import { IPCLogger, IPCNotification } from "./types";
 
 export namespace Preload {
     interface BridgeGlobalShortcut {
@@ -31,12 +31,8 @@ export namespace Preload {
         debug: (...args: IPCLogger.Args) => void;
     }
 
-    interface BridgeLogger {
-        alert: (...args: IPCLogger.Args) => void;
-        error: (...args: IPCLogger.Args) => void;
-        warning: (...args: IPCLogger.Args) => void;
-        info: (...args: IPCLogger.Args) => void;
-        debug: (...args: IPCLogger.Args) => void;
+    interface BridgeNotification {
+        notification: (options: IPCNotification.Options) => void;
     }
 
     export interface TCBridge {
@@ -44,5 +40,6 @@ export namespace Preload {
         electron: BridgeElectron;
         db: BridgeDB;
         logger: BridgeLogger;
+        notification: BridgeNotification;
     }
 }
