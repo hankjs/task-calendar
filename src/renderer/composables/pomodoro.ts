@@ -56,6 +56,9 @@ export function usePomodoro(props: PomodoroProps = {}) {
     });
 
     function start() {
+        if (status.value === Status.Running) {
+            return;
+        }
         notification({
             title: category.value,
             body: `${category.value}开始`,
@@ -74,6 +77,7 @@ export function usePomodoro(props: PomodoroProps = {}) {
 
     function pause() {
         status.value = Status.Paused;
+        timer.value.pause();
     }
 
     //#region Timer

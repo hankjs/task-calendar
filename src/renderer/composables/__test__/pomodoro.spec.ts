@@ -174,4 +174,35 @@ describe("Pomodoro", () => {
         expect(minute.value).toBe(5);
         expect(seconds.value).toBe(0);
     });
+
+    it("start 时，再次调用 start 保持现状", () => {
+        const { start, elapsed } = useSetupHooks(usePomodoro);
+
+        vi.useFakeTimers();
+        start();
+        expect(elapsed.value).toBe(0);
+
+        vi.advanceTimersByTime(1000);
+        // start 会重置elapsed
+        start();
+        expect(elapsed.value).toBe(1);
+    });
+
+    it("pause", () => {
+        const { start, pause, status, elapsed } = useSetupHooks(usePomodoro);
+
+        vi.useFakeTimers();
+        start();
+        expect(status.value).toBe(Status.Running);
+
+        pause();
+        expect(status.value).toBe(Status.Paused);
+
+        vi.advanceTimersByTime(1000);
+        expect(elapsed.value).toBe(0);
+
+        start();
+        vi.advanceTimersByTime(1000);
+        expect(elapsed.value).toBe(1);
+    });
 });
