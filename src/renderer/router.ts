@@ -15,6 +15,16 @@ export let router = VueRouter.createRouter({
             ],
         },
         {
+            path: "/window-timer",
+            component: () => import("./window/window-timer.vue"),
+            children: [
+                {
+                    path: "",
+                    component: () => import("./pages/timer/index.vue"),
+                },
+            ],
+        },
+        {
             path: "/:catchAll(.*)",
             redirect: "/window-main",
         },

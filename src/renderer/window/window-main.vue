@@ -1,17 +1,39 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="page-box">
-    <Suspense>
-      <router-view />
-    </Suspense>
-  </div>
+    <main class="page">
+        <nav class="nav"></nav>
+        <section class="container">
+            <header class="header"></header>
+
+            <section>
+                <Suspense>
+                    <router-view />
+                </Suspense>
+            </section>
+        </section>
+    </main>
 </template>
 
-<style scoped lang="scss">
-.page-box {
-  width: 100vw;
-  height: 100vh;
+<style scoped>
+.page {
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template: 100% / 400px 1fr;
+}
+
+.nav {
+    background-color: #2e2e2e;
+}
+
+.container {
+    display: grid;
+    grid-template: 48px 1fr / 100%;
+}
+
+.header {
+    background-color: #383838;
 }
 </style>

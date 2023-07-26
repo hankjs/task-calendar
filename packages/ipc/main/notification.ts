@@ -1,11 +1,11 @@
 import { Notification, ipcMain } from "electron";
-import { IPCNotification } from "../interface/types";
+import { IPCNotification, IPCRegister } from "../interface/types";
 
-export function IPCNotificationRegister() {
+export const IPCNotificationRegister: IPCRegister = (app) => {
     ipcMain.handle(
         IPCNotification.Channel.notification,
         (e, options: IPCNotification.Options) => {
             new Notification(options).show();
         }
     );
-}
+};

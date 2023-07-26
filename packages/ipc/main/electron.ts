@@ -1,4 +1,4 @@
 import { ipcMain, ipcRenderer } from "electron";
+import { IPCRegister } from "../interface/types";
 
-export function IPCElectronRegister() {
-}
+export const IPCElectronRegister: IPCRegister = (app) => {};

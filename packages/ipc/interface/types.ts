@@ -1,3 +1,12 @@
+export interface AppDatabase {
+    list(): string[];
+}
+export interface App {
+    db: AppDatabase;
+}
+
+export type IPCRegister = (app: App) => void;
+
 export namespace IPCGlobalShortcut {
     const NS = "GlobalShortcut";
 
@@ -53,5 +62,13 @@ export namespace IPCNotification {
 
     export namespace Channel {
         export const notification = `${NS}:notification`;
+    }
+}
+
+export namespace IPCDB {
+    const NS = "DB";
+
+    export namespace Channel {
+        export const list = `${NS}:list`;
     }
 }

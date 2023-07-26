@@ -19,8 +19,7 @@ export namespace Preload {
     }
 
     interface BridgeDB {
-        get(key: string): Promise<any>;
-        set(key: string, val: any): Promise<void>;
+        list(): Promise<any[]>;
     }
 
     interface BridgeLogger {
