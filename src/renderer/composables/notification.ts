@@ -9,9 +9,9 @@ export function useNotification() {
     );
 
     onMounted(async () => {
-        refNotification.value = (await getBridge(
+        refNotification.value = getBridge(
             "notification"
-        )) as Preload.TCBridge["notification"];
+        ) as Preload.TCBridge["notification"];
     });
 
     function notification(options: IPCNotification.Options) {

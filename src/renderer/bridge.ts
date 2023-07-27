@@ -4,21 +4,15 @@ import { BRIDGE_KEY } from "@task/config/src/constant";
 
 type BridgeKey = keyof Preload.TCBridge;
 
+export function getBridge(): Preload.TCBridge;
+export function getBridge<K extends BridgeKey>(key: K): Preload.TCBridge[K];
 export function getBridge<K extends BridgeKey>(key?: K) {
-    return new Promise(
-        async (
-            resolve: (r: Preload.TCBridge[K] | Preload.TCBridge) => void
-        ) => {
-            if (!globalThis[BRIDGE_KEY]) {
-                await setupBridge();
-            }
-            if (key) {
-                return resolve(
-                    globalThis[BRIDGE_KEY][key] as Preload.TCBridge[K]
-                );
-            }
+    if (!globalThis[BRIDGE_KEY]) {
+        setupBridge();
+    }
+    if (key) {
+        return globalThis[BRIDGE_KEY][key] as Preload.TCBridge[K];
+    }
 
-            return resolve(globalThis[BRIDGE_KEY]);
-        }
-    );
+    return globalThis[BRIDGE_KEY];
 }

@@ -17,7 +17,7 @@ const strSeconds = computed(() => {
 const list = shallowRef<any[]>([]);
 
 async function requestList() {
-    const db = (await getBridge("db")) as Preload.TCBridge["db"];
+    const db = getBridge("db");
     list.value = await db.list();
     console.log("list.value", list.value);
 }

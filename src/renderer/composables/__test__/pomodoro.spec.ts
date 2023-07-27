@@ -166,9 +166,6 @@ describe("Pomodoro", () => {
         // 58秒 过去了
         vi.advanceTimersByTime(58 * 1000);
 
-        console.log("elapsed", elapsed.value);
-        console.log("totalSeconds", totalSeconds.value);
-
         // 下一个是ShortBreak
         expect(hours.value).toBe(0);
         expect(minute.value).toBe(5);

@@ -1,5 +1,6 @@
 import { BRIDGE_KEY } from "@task/config/src/constant";
 import { Preload } from "../interface/preload";
+import { TCBridgeWeb } from "./platform/web";
 
 declare global {
     interface Window {
@@ -15,6 +16,5 @@ export async function setupBridge() {
         return;
     }
 
-    const bridge = await import("./platform/web");
-    globalThis[BRIDGE_KEY] = bridge.TCBridgeWeb;
+    globalThis[BRIDGE_KEY] = TCBridgeWeb;
 }
