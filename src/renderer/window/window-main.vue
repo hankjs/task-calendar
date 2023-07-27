@@ -1,18 +1,18 @@
 <script setup lang="ts"></script>
 
 <template>
-    <main class="page">
+    <div class="page">
         <nav class="nav"></nav>
-        <section class="container">
+        <div class="container">
             <header class="header"></header>
 
-            <section>
+            <main>
                 <Suspense>
                     <router-view />
                 </Suspense>
-            </section>
-        </section>
-    </main>
+            </main>
+        </div>
+    </div>
 </template>
 
 <style scoped>

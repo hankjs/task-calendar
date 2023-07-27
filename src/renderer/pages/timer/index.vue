@@ -1,39 +1,14 @@
 <script lang="ts" setup>
-import { getBridge } from "@/bridge";
-import { Status, usePomodoro } from "@/composables/pomodoro";
-import { Preload } from "@task/ipc/interface/preload";
-import { computed, shallowRef } from "vue";
+import Timer from "@/components/timer/index.vue";
+import { useTaskStore } from "@/store/task";
 
-const { seconds, minute, round, status, category, start, pause } =
-    usePomodoro();
-const strMinute = computed(() => {
-    return minute.value < 10 ? `0${minute.value}` : minute.value;
-});
-
-const strSeconds = computed(() => {
-    return seconds.value < 10 ? `0${seconds.value}` : seconds.value;
-});
-
-const list = shallowRef<any[]>([]);
-
-async function requestList() {
-    const db = getBridge("db");
-    list.value = await db.list();
-    console.log("list.value", list.value);
-}
-requestList();
+const taskStore = useTaskStore();
 </script>
 
 <template>
     <section>
-        <h2>{{ strMinute }}:{{ strSeconds }}</h2>
-        <button v-if="status !== Status.Running" @click="start">Start</button>
-        <button v-else @click="pause">Pause</button>
-        <ul>
-            <li>Category: {{ category }}</li>
-            <li>Round: {{ round }}</li>
-            <li>Status: {{ status }}</li>
-        </ul>
+        <Timer />
+        {{ taskStore.tasks.length }}
     </section>
 </template>
 
