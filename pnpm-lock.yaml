@@ -20,6 +20,9 @@ importers:
       '@task/ipc':
         specifier: workspace:^
         version: link:packages/ipc
+      '@task/model':
+        specifier: workspace:^
+        version: link:packages/model
       '@task/share':
         specifier: workspace:^
         version: link:packages/share
@@ -129,12 +132,17 @@ importers:
       '@task/env':
         specifier: workspace:^
         version: link:../env
+      '@task/model':
+        specifier: workspace:^
+        version: link:../model
       '@task/share':
         specifier: workspace:^
         version: link:../share
       electron:
         specifier: ^22.3.15
         version: 22.3.15
+
+  packages/model: {}
 
   packages/share: {}
 

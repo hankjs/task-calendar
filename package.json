@@ -19,6 +19,7 @@
     "@task/config": "workspace:^",
     "@task/env": "workspace:^",
     "@task/ipc": "workspace:^",
+    "@task/model": "workspace:^",
     "@task/share": "workspace:^",
     "@types/better-sqlite3": "^7.6.4",
     "@types/fs-extra": "^11.0.1",
