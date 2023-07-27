@@ -9,7 +9,7 @@ declare global {
     var TCBridge: Preload.TCBridge;
 }
 
-export async function setupBridge() {
+export function setupBridge() {
     // @ts-expect-error typescript foolish
     if (VITE_APP_PLATFORM === "Electron") {
         // Electron init bridge in src/main/preload.ts

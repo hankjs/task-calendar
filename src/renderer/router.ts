@@ -3,10 +3,10 @@ import * as VueRouter from "vue-router";
 export let router = VueRouter.createRouter({
     history: VueRouter.createMemoryHistory(),
     routes: [
-        { path: "/", redirect: "/window-main" },
+        { path: "/", redirect: "/blank" },
         {
-            path: "/window-main",
-            component: () => import("./window/window-main.vue"),
+            path: "/main",
+            component: () => import("./window/main.vue"),
             children: [
                 {
                     path: "",
@@ -15,12 +15,12 @@ export let router = VueRouter.createRouter({
             ],
         },
         {
-            path: "/window-timer",
-            component: () => import("./window/window-timer.vue"),
+            path: "/blank",
+            component: () => import("./window/blank.vue"),
             children: [
                 {
                     path: "",
-                    component: () => import("./pages/timer/index.vue"),
+                    component: () => import("./pages/calendar/index.vue"),
                 },
             ],
         },

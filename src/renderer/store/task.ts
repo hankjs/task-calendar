@@ -7,7 +7,6 @@ const db = getBridge("db");
 
 export const useTaskStore = defineStore("task", () => {
     const tasks = shallowRef<Task[]>([]);
-    console.log("taskStore");
 
     db.list().then((list) => {
         tasks.value = list;

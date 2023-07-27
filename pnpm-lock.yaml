@@ -20,6 +20,9 @@ importers:
       '@task/ipc':
         specifier: workspace:^
         version: link:packages/ipc
+      '@task/lang':
+        specifier: workspace:^
+        version: link:packages/lang/src
       '@task/model':
         specifier: workspace:^
         version: link:packages/model
@@ -53,6 +56,9 @@ importers:
       dat.gui:
         specifier: ^0.7.9
         version: 0.7.9
+      dayjs:
+        specifier: ^1.11.9
+        version: 1.11.9
       electron:
         specifier: ^22.3.15
         version: 22.3.15
@@ -144,6 +150,8 @@ importers:
       electron:
         specifier: ^22.3.15
         version: 22.3.15
+
+  packages/lang/src: {}
 
   packages/model: {}
 
@@ -1914,6 +1922,10 @@ packages:
 
   /dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
+    dev: true
+
+  /dayjs@1.11.9:
+    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
     dev: true
 
   /de-indent@1.0.2:
