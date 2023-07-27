@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
-import { IPCGlobalShortcut } from "../interface/types";
+import { IPCGlobalShortcut, IPCRegister } from "../interface/types";
 
-export function IPCGlobalShortcutRegister() {
+export const IPCGlobalShortcutRegister: IPCRegister = (app) => {
     ipcMain.handle(IPCGlobalShortcut.Channel.register, (e, accelerator) => {
         e.sender.postMessage("gs", accelerator);
     });
-}
+};

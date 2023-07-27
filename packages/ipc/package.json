@@ -11,6 +11,7 @@
   "devDependencies": {
     "@task/config": "workspace:^",
     "@task/env": "workspace:^",
+    "@task/model": "workspace:^",
     "@task/share": "workspace:^",
     "electron": "^22.3.15"
   }

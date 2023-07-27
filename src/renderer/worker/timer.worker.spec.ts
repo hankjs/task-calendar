@@ -46,7 +46,7 @@ describe("timer web worker", () => {
         expect(spyComplete).not.toBeCalled();
 
         /** vi.clearAllTimers inadequacy */
-        await vi.advanceTimersByTimeAsync(60 * 1000);
+        await vi.advanceTimersByTimeAsync(1 * 1000);
 
         expect(spyStart).toBeCalledTimes(1);
         expect(spyComplete).toBeCalled();
