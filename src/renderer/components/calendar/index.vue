@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { ref, shallowReactive, shallowRef, watch } from "vue";
+import { ref, shallowRef, watch } from "vue";
 import Calendar from "@toast-ui/calendar";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
-import { View } from "./types";
+import { ViewType } from "./types";
 
 const props = defineProps<{
-    view?: View;
+    view?: ViewType;
 }>();
 // const emits = defineEmits([]);
 
@@ -29,7 +29,7 @@ watch(refCalendar, () => {
     }
 
     calendar.value = new Calendar(refCalendar.value as Element, {
-        defaultView: props.view ?? "week",
+        defaultView: props.view ?? ViewType.Week,
         template: {
             time(event) {
                 const { start, end, title } = event;

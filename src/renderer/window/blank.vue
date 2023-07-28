@@ -2,9 +2,7 @@
 
 <template>
     <main class="page">
-        <Suspense>
-            <router-view />
-        </Suspense>
+        <router-view />
     </main>
 </template>
 

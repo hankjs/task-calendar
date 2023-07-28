@@ -1,1 +1,5 @@
-export type View = "month" | "week" | "day";
+export enum ViewType {
+    Month = "month",
+    Week = "week",
+    Day = "day",
+}
