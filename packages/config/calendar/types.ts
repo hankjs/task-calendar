@@ -1,0 +1,1 @@
+import { CSSProperties } from "vue";

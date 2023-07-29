@@ -1,0 +1,22 @@
+.toastui-calendar-template-milestoneTitle,
+.toastui-calendar-template-taskTitle,
+.toastui-calendar-template-alldayTitle {
+    display: grid;
+    height: 100%;
+}
+
+.toastui-calendar-template-milestoneTitle {
+    grid: var(--milestone_title-grid);
+    justify-content: var(--milestone_title-justify-content);
+    align-items: var(--milestone_title-align-items);
+}
+.toastui-calendar-template-taskTitle {
+    grid: var(--task_title-grid);
+    justify-content: var(--task_title-justify-content);
+    align-items: var(--task_title-align-items);
+}
+.toastui-calendar-template-alldayTitle {
+    grid: var(--allday_title-grid);
+    justify-content: var(--allday_title-justify-content);
+    align-items: var(--allday_title-align-items);
+}

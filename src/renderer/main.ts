@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import "./assets/styles";
+import "./styles";
 import "./assets/icon/iconfont.css";
 import App from "./App.vue";
 import { router } from "./router";

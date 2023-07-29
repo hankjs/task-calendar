@@ -1,0 +1,13 @@
+:root {
+    --transition-snappy: all 0.3s cubic-bezier(0.07, 0.95, 0, 1);
+
+    --milestone_title-grid: initial;
+    --milestone_title-justify-content: flex-end;
+    --milestone_title-align-items: center;
+    --task_title-grid: initial;
+    --task_title-justify-content: flex-end;
+    --task_title-align-items: center;
+    --allday_title-grid: initial;
+    --allday_title-justify-content: flex-end;
+    --allday_title-align-items: center;
+}

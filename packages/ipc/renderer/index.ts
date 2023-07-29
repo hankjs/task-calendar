@@ -1,4 +1,4 @@
-import { BRIDGE_KEY } from "@task/config/src/constant";
+import { BRIDGE_KEY } from "@task/config/constant";
 import { Preload } from "../interface/preload";
 import { TCBridgeWeb } from "./platform/web";
 

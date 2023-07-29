@@ -1,6 +1,6 @@
 import { setupBridge } from "@task/ipc/renderer";
 import { Preload } from "@task/ipc/interface/preload";
-import { BRIDGE_KEY } from "@task/config/src/constant";
+import { BRIDGE_KEY } from "@task/config/constant";
 
 type BridgeKey = keyof Preload.TCBridge;
 

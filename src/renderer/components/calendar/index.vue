@@ -1,68 +1,43 @@
 <script lang="ts" setup>
-import { ref, shallowRef, watch } from "vue";
-import Calendar from "@toast-ui/calendar";
+import { Ref, ref } from "vue";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
-import { ViewType } from "./types";
+import { ViewType } from "@task/config/calendar";
+import { useCalendar } from "./calendar";
+import { EventObject } from "@toast-ui/calendar";
+import {
+    DayNameInfo,
+    EventInfo,
+    MoreEventsButton,
+    SelectDateTimeInfo,
+    UpdatedEventInfo,
+} from "./props";
 
 const props = defineProps<{
     view?: ViewType;
+    events?: EventObject[];
 }>();
-// const emits = defineEmits([]);
+const emits = defineEmits<{
+    (e: "selectDateTime", info: SelectDateTimeInfo): void;
+    (e: "beforeCreateEvent", event: EventObject): void;
+    (e: "beforeUpdateEvent", updatedEventInfo: UpdatedEventInfo): void;
+    (e: "beforeDeleteEvent", event: EventObject): void;
+    (e: "afterRenderEvent", event: EventObject): void;
+    (e: "clickDayName", dayNameInfo: DayNameInfo): void;
+    (e: "clickEvent", eventInfo: EventInfo): void;
+    (e: "clickMoreEventsBtn", moreEventsBtnInfo: MoreEventsButton): void;
+    (e: "clickTimezonesCollapseBtn", prevCollapsedState: boolean): void;
+}>();
 
 const refCalendar = ref<Element | null>(null);
-const calendar = shallowRef<Calendar | null>(null);
-
-watch(
-    () => props.view,
-    (view) => {
-        if (!view) {
-            return;
-        }
-
-        calendar.value?.changeView(view);
-    }
-);
-
-watch(refCalendar, () => {
-    if (!refCalendar.value) {
-        return;
-    }
-
-    calendar.value = new Calendar(refCalendar.value as Element, {
-        defaultView: props.view ?? ViewType.Week,
-        template: {
-            time(event) {
-                const { start, end, title } = event;
-                console.log("start", start);
-                console.log("end", end);
-
-                return `<span style="color: white;">${11} ${title}</span>`;
-            },
-            allday(event) {
-                return `<span style="color: gray;">${event.title}</span>`;
-            },
-        },
-        calendars: [
-            {
-                id: "cal1",
-                name: "Personal",
-                backgroundColor: "#03bd9e",
-            },
-            {
-                id: "cal2",
-                name: "Work",
-                backgroundColor: "#00a9ff",
-            },
-        ],
-    });
-});
+useCalendar(refCalendar as Ref<Element | null>, props, emits);
 </script>
 
 <template>
     <div class="calendar" ref="refCalendar"></div>
 </template>
 
-<style scoped>
+<style>
 .calendar {
+    overflow-y: auto;
 }
 </style>
