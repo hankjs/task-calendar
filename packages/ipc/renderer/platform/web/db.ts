@@ -1,5 +1,9 @@
 import { Task } from "@task/model";
-import { BridgeDB } from "../../../interface/bridge-db";
+import {
+    BridgeDB,
+    BridgeProjectDB,
+    BridgeTaskDB,
+} from "../../../interface/bridge-db";
 import dayjs from "dayjs";
 
 function getDate(day: number = 0, h: number = 0, m: number = 0) {
@@ -31,27 +35,56 @@ function assign(target: any, ...sources: any[]) {
     return target;
 }
 
-export class DBBridgeWeb implements BridgeDB {
-    #tasks: Task[] = [
-        {
-            id: "1",
-            calendarId: "1",
-            title: "Event 2",
-            start: getDate(0, 10),
-            end: getDate(0, 10, 30),
-        },
-    ];
+const MOCK_TASKS: Task[] = [
+    {
+        id: "1",
+        calendarId: "1",
+        title: "Event 2",
+        start: getDate(0, 10),
+        end: getDate(0, 10, 30),
+        createdAt: dayjs().format(),
+        updatedAt: null,
+    },
+];
 
+export class DBBridgeWeb implements BridgeDB {
+    task: BridgeTaskDB;
+    project: BridgeProjectDB;
+
+    constructor() {
+        this.task = new BridgeTaskDBWeb();
+        this.project = new BridgeProjectDBWeb();
+    }
+}
+
+const mockTasks: Task[] = [...MOCK_TASKS];
+
+export class BridgeTaskDBWeb implements BridgeTaskDB {
     async list() {
-        return [...this.#tasks];
+        return mockTasks;
     }
 
-    async updateTask(id: string, payload: Partial<Task>) {
-        const task = this.#tasks.find((t) => t.id === id);
+    async add(task: Partial<Task>) {
+        const params = {
+            ...task,
+            id: Math.random().toString(),
+            createdAt: dayjs().format(),
+            updatedAt: null,
+        } as Task;
+
+        mockTasks.push(params);
+
+        return params;
+    }
+
+    async update(id: string, payload: Partial<Task>) {
+        const task = mockTasks.find((t) => t.id === id);
         if (task) {
             assign(task, payload);
         }
 
-        return true;
+        return task;
     }
 }
+
+export class BridgeProjectDBWeb implements BridgeProjectDB {}

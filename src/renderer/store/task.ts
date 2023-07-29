@@ -1,8 +1,9 @@
 import { getBridge } from "@/bridge";
 import { Task } from "@task/model";
 import { defineStore } from "pinia";
-import { shallowRef } from "vue";
 import dayjs from "dayjs";
+import { useRequest } from "vue-request";
+import { shallowRef } from "vue";
 
 const db = getBridge("db");
 
@@ -13,14 +14,23 @@ export interface CalendarTask extends Omit<Task, "start" | "end"> {
 
 export const useTaskStore = defineStore("task", () => {
     const tasks = shallowRef<Task[]>([]);
+    const rTasks = useRequest(db.task.list.bind(db.task), {
+        manual: true,
+    });
 
-    async function requestTasks() {
-        const list = await db.list();
-        tasks.value = list;
+    //#region Actions
+    async function init() {
+        const res = await rTasks.runAsync();
+        tasks.value = res;
     }
-    requestTasks();
 
-    async function updateTask(id: string, task: Partial<CalendarTask>) {
+    async function add(task: Partial<Task>) {
+        const newTask = await db.task.add(task);
+        tasks.value = [...tasks.value, newTask as Task];
+        return newTask;
+    }
+
+    async function update(id: string, task: Partial<CalendarTask>) {
         const payload: Partial<Task> = {
             ...task,
             start: task.start
@@ -28,9 +38,20 @@ export const useTaskStore = defineStore("task", () => {
                 : undefined,
             end: task.end ? dayjs(task.end.toString()).format() : undefined,
         };
-        await db.updateTask(id, payload);
-        await requestTasks();
+        await db.task.update(id, payload);
     }
+    //#endregion Actions
 
-    return { tasks, updateTask };
+    return {
+        //#region State
+        tasks,
+        //#endregion State
+
+        /** Actions */
+        a: {
+            init,
+            add,
+            update,
+        },
+    };
 });
