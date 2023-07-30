@@ -10,13 +10,23 @@ function getDate(day: number = 0, h: number = 0, m: number = 0) {
     return dayjs().hour(h).minute(m).add(day, "day").format();
 }
 
+function removeUndefined(obj: any) {
+    const ret = {
+        ...obj,
+    };
+    Object.keys(ret).forEach((key) => {
+        if (ret[key] === undefined) {
+            delete ret[key];
+        }
+    });
+    console.log("ret", ret);
+    return ret;
+}
+
 function assign(target: any, ...sources: any[]) {
     sources.forEach((source) => {
         const descriptors = Object.keys(source).reduce(
             (descriptors: any, key) => {
-                if (source[key] === undefined) {
-                    return descriptors;
-                }
                 descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
                 return descriptors;
             },
@@ -57,33 +67,61 @@ export class DBBridgeWeb implements BridgeDB {
     }
 }
 
-const mockTasks: Task[] = [...MOCK_TASKS];
+let store: Task[] = [];
+
+export function clearTasks() {
+    store = [];
+}
 
 export class BridgeTaskDBWeb implements BridgeTaskDB {
     async list() {
-        return mockTasks;
+        return store;
     }
 
     async add(task: Partial<Task>) {
-        const params = {
+        const newTask = {
             ...task,
-            id: Math.random().toString(),
+            id: String(Date.now()),
             createdAt: dayjs().format(),
             updatedAt: null,
         } as Task;
 
-        mockTasks.push(params);
+        const list = [...store];
+        list.push(newTask);
+        store = list;
 
-        return params;
+        return newTask;
     }
 
     async update(id: string, payload: Partial<Task>) {
-        const task = mockTasks.find((t) => t.id === id);
-        if (task) {
-            assign(task, payload);
+        const task = store.find((t) => t.id === id);
+
+        if (!task) {
+            return;
         }
 
-        return task;
+        const updatedTask = {} as Required<Task>;
+        Object.assign(updatedTask, task, removeUndefined(payload));
+        const index = store.findIndex((t) => t.id === id);
+        const list = [...store];
+        list.splice(index, 1, updatedTask as Task);
+        store = list;
+
+        return updatedTask;
+    }
+
+    async remove(id: string) {
+        const index = store.findIndex((t) => t.id === id);
+
+        if (index < 0) {
+            return false;
+        }
+
+        const list = [...store];
+        list.splice(index, 1);
+        store = list;
+
+        return true;
     }
 }
 

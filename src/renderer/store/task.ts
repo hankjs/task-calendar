@@ -8,50 +8,51 @@ import { shallowRef } from "vue";
 const db = getBridge("db");
 
 export interface CalendarTask extends Omit<Task, "start" | "end"> {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
 }
 
 export const useTaskStore = defineStore("task", () => {
-    const tasks = shallowRef<Task[]>([]);
     const rTasks = useRequest(db.task.list.bind(db.task), {
         manual: true,
     });
 
     //#region Actions
-    async function init() {
-        const res = await rTasks.runAsync();
-        tasks.value = res;
+    async function list() {
+        return await rTasks.runAsync();
     }
 
     async function add(task: Partial<Task>) {
         const newTask = await db.task.add(task);
-        tasks.value = [...tasks.value, newTask as Task];
-        return newTask;
+        return newTask as Required<Task>;
     }
 
     async function update(id: string, task: Partial<CalendarTask>) {
         const payload: Partial<Task> = {
             ...task,
-            start: task.start
-                ? dayjs(task.start.toString()).format()
-                : undefined,
-            end: task.end ? dayjs(task.end.toString()).format() : undefined,
+            start: task.start ? dayjs(task.start).format() : undefined,
+            end: task.end ? dayjs(task.end).format() : undefined,
         };
-        await db.task.update(id, payload);
+        const updatedTask = await db.task.update(id, payload);
+        return updatedTask as Required<Task>;
+    }
+
+    async function remove(id: string) {
+        await db.task.remove(id);
     }
     //#endregion Actions
 
     return {
         //#region State
-        tasks,
+        tasks: rTasks.data,
         //#endregion State
 
         /** Actions */
         a: {
-            init,
+            list,
             add,
             update,
+            remove,
         },
     };
 });
