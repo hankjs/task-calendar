@@ -1,29 +1,19 @@
 <script lang="ts" setup>
 import Calendar from "@/components/calendar/index.vue";
 import { ViewType } from "@task/config/calendar";
-import { useTaskStore } from "@/store/task";
-import {
-    SelectDateTimeInfo,
-    UpdatedEventInfo,
-} from "@/components/calendar/props";
+import { useCalendarTask } from "./calendar";
 
-const taskStore = useTaskStore();
-function onSelectDateTime(info: SelectDateTimeInfo) {
-    console.log(info);
-}
-
-function onBeforeUpdateEvent(info: UpdatedEventInfo) {
-    taskStore.updateTask(info.event.id, info.changes);
-}
+const tasksHook = useCalendarTask();
+const { tasks } = tasksHook;
 </script>
 
 <template>
     <section class="calendar">
         <Calendar
             :view="ViewType.Day"
-            @select-date-time="onSelectDateTime"
-            @before-update-event="onBeforeUpdateEvent"
-            :events="taskStore.tasks"
+            @select-date-time="tasksHook.on.selectDateTime"
+            @before-update-event="tasksHook.on.beforeUpdateEvent"
+            :events="tasks"
         />
     </section>
 </template>

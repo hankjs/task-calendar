@@ -39,6 +39,7 @@ export function useCalendar(
         });
         cal.on("selectDateTime", (info: SelectDateTimeInfo) => {
             emits("selectDateTime", info);
+            cal.clearGridSelections();
         });
         cal.on("beforeCreateEvent", (event: EventObject) => {
             emits("beforeCreateEvent", event);

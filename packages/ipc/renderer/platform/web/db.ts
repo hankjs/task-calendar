@@ -52,7 +52,7 @@ export function clearTasks() {
 
 export class BridgeTaskDBWeb implements BridgeTaskDB {
     async list() {
-        return store;
+        return [...store];
     }
 
     async add(task: Partial<Task>) {
@@ -112,7 +112,7 @@ export function clearProjects() {
 
 export class BridgeProjectDBWeb implements BridgeProjectDB {
     async list(): Promise<Project[]> {
-        return projectStore;
+        return [...projectStore];
     }
     async add(project: Partial<Project>): Promise<void | Project> {
         const newProject = {
