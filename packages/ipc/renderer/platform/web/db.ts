@@ -1,4 +1,4 @@
-import { Task } from "@task/model";
+import { Project, Task } from "@task/model";
 import {
     BridgeDB,
     BridgeProjectDB,
@@ -19,30 +19,7 @@ function removeUndefined(obj: any) {
             delete ret[key];
         }
     });
-    console.log("ret", ret);
     return ret;
-}
-
-function assign(target: any, ...sources: any[]) {
-    sources.forEach((source) => {
-        const descriptors = Object.keys(source).reduce(
-            (descriptors: any, key) => {
-                descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
-                return descriptors;
-            },
-            {}
-        );
-
-        // 默认情况下，Object.assign 也会复制可枚举的 Symbol 属性
-        Object.getOwnPropertySymbols(source).forEach((sym) => {
-            const descriptor = Object.getOwnPropertyDescriptor(source, sym);
-            if (descriptor?.enumerable) {
-                descriptors[sym] = descriptor;
-            }
-        });
-        Object.defineProperties(target, descriptors);
-    });
-    return target;
 }
 
 const MOCK_TASKS: Task[] = [
@@ -100,11 +77,13 @@ export class BridgeTaskDBWeb implements BridgeTaskDB {
             return;
         }
 
-        const updatedTask = {} as Required<Task>;
+        const updatedTask = {
+            updatedAt: dayjs().format(),
+        } as Required<Task>;
         Object.assign(updatedTask, task, removeUndefined(payload));
         const index = store.findIndex((t) => t.id === id);
         const list = [...store];
-        list.splice(index, 1, updatedTask as Task);
+        list.splice(index, 1, updatedTask);
         store = list;
 
         return updatedTask;
@@ -125,4 +104,63 @@ export class BridgeTaskDBWeb implements BridgeTaskDB {
     }
 }
 
-export class BridgeProjectDBWeb implements BridgeProjectDB {}
+let projectStore: Project[] = [];
+
+export function clearProjects() {
+    projectStore = [];
+}
+
+export class BridgeProjectDBWeb implements BridgeProjectDB {
+    async list(): Promise<Project[]> {
+        return projectStore;
+    }
+    async add(project: Partial<Project>): Promise<void | Project> {
+        const newProject = {
+            ...project,
+            id: String(Date.now()),
+            createdAt: dayjs().format(),
+            updatedAt: null,
+        } as Project;
+
+        const list = [...projectStore];
+        list.push(newProject);
+        projectStore = list;
+
+        return newProject;
+    }
+    async update(
+        id: string,
+        payload: Partial<Project>
+    ): Promise<void | Project> {
+        const project = projectStore.find((t) => t.id === id);
+
+        if (!project) {
+            return;
+        }
+
+        const updatedProject = {
+            updatedAt: dayjs().format(),
+        } as Required<Project>;
+        Object.assign(updatedProject, project, removeUndefined(payload));
+        const index = projectStore.findIndex((t) => t.id === id);
+        const list = [...projectStore];
+        list.splice(index, 1, updatedProject);
+        projectStore = list;
+
+        return updatedProject;
+    }
+
+    async remove(id: string): Promise<boolean> {
+        const index = projectStore.findIndex((t) => t.id === id);
+
+        if (index < 0) {
+            return false;
+        }
+
+        const list = [...projectStore];
+        list.splice(index, 1);
+        projectStore = list;
+
+        return true;
+    }
+}

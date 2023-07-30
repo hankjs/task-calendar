@@ -3,7 +3,6 @@ import { Task } from "@task/model";
 import { defineStore } from "pinia";
 import dayjs from "dayjs";
 import { useRequest } from "vue-request";
-import { shallowRef } from "vue";
 
 const db = getBridge("db");
 

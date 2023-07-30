@@ -1,4 +1,4 @@
-import { Task } from "@task/model";
+import { Task, Project } from "@task/model";
 
 export interface BridgeTaskDB {
     list(): Promise<Task[]>;
@@ -7,7 +7,12 @@ export interface BridgeTaskDB {
     remove(id: string): Promise<boolean>;
 }
 
-export interface BridgeProjectDB {}
+export interface BridgeProjectDB {
+    list(): Promise<Project[]>;
+    add(project: Partial<Project>): Promise<Project | void>;
+    update(id: string, project: Partial<Project>): Promise<Project | void>;
+    remove(id: string): Promise<boolean>;
+}
 
 export interface BridgeDB {
     task: BridgeTaskDB;
