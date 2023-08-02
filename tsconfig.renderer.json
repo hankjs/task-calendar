@@ -16,7 +16,8 @@
     "types": [
       "lodash-es",
       "vite/client",
-      "fs-extra"
+      "fs-extra",
+      "naive-ui/volar"
     ],
     "skipLibCheck": true,
     "noEmit": false,

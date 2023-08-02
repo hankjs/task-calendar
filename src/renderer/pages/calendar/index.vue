@@ -2,6 +2,7 @@
 import Calendar from "@/components/calendar/index.vue";
 import { ViewType } from "@task/config/calendar";
 import { useCalendarTask } from "./calendar";
+import { NButton } from "naive-ui";
 
 const tasksHook = useCalendarTask();
 const { tasks } = tasksHook;
@@ -22,5 +23,6 @@ const { tasks } = tasksHook;
 .calendar {
     display: grid;
     grid-template: 1fr / 1fr;
+    flex: 1;
 }
 </style>

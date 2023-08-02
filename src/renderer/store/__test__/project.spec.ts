@@ -1,14 +1,13 @@
 import { it, expect, vi, describe, beforeEach } from "vitest";
-import dayjs from "dayjs";
 import { useProjectStore } from "../project";
 import { setActivePinia, createPinia } from "pinia";
 import { useSetupHooks } from "@/tests/component";
-import { clearProjects } from "@task/ipc/renderer/platform/web/db";
+import { projectStore } from "@task/ipc/renderer/platform/web/db.data";
 
 describe("useProjectStore", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        clearProjects();
+        projectStore.clearProjects();
     });
 
     it("should return projects", async () => {

@@ -5,10 +5,7 @@ import {
     BridgeTaskDB,
 } from "../../../interface/bridge-db";
 import dayjs from "dayjs";
-
-function getDate(day: number = 0, h: number = 0, m: number = 0) {
-    return dayjs().hour(h).minute(m).add(day, "day").format();
-}
+import { projectStore, taskStore } from "./db.data";
 
 function removeUndefined(obj: any) {
     const ret = {
@@ -22,55 +19,44 @@ function removeUndefined(obj: any) {
     return ret;
 }
 
-const MOCK_TASKS: Task[] = [
-    {
-        id: "1",
-        calendarId: "1",
-        title: "Event 2",
-        start: getDate(0, 10),
-        end: getDate(0, 10, 30),
-        createdAt: dayjs().format(),
-        updatedAt: null,
-    },
-];
-
 export class DBBridgeWeb implements BridgeDB {
     task: BridgeTaskDB;
     project: BridgeProjectDB;
 
     constructor() {
-        this.task = new BridgeTaskDBWeb();
-        this.project = new BridgeProjectDBWeb();
+        this.project = new BridgeProjectDBWeb(this);
+        this.task = new BridgeTaskDBWeb(this);
     }
-}
-
-let store: Task[] = [];
-
-export function clearTasks() {
-    store = [];
 }
 
 export class BridgeTaskDBWeb implements BridgeTaskDB {
     async list() {
-        return [...store];
+        return taskStore.getTasks();
     }
 
     async add(task: Partial<Task>) {
+        let { calendarId } = task;
+        if (!calendarId) {
+            calendarId = await this.db.project.getDefaultId();
+        }
+
         const newTask = {
             ...task,
             id: String(Date.now()),
+            calendarId,
             createdAt: dayjs().format(),
             updatedAt: null,
         } as Task;
 
-        const list = [...store];
-        list.push(newTask);
-        store = list;
+        const store = taskStore.getTasks();
+        store.push(newTask);
+        taskStore.setTasks(store);
 
         return newTask;
     }
 
     async update(id: string, payload: Partial<Task>) {
+        const store = taskStore.getTasks();
         const task = store.find((t) => t.id === id);
 
         if (!task) {
@@ -82,39 +68,43 @@ export class BridgeTaskDBWeb implements BridgeTaskDB {
         } as Required<Task>;
         Object.assign(updatedTask, task, removeUndefined(payload));
         const index = store.findIndex((t) => t.id === id);
-        const list = [...store];
-        list.splice(index, 1, updatedTask);
-        store = list;
+        store.splice(index, 1, updatedTask);
+        taskStore.setTasks(store);
 
         return updatedTask;
     }
 
     async remove(id: string) {
+        const store = taskStore.getTasks();
         const index = store.findIndex((t) => t.id === id);
 
         if (index < 0) {
             return false;
         }
 
-        const list = [...store];
-        list.splice(index, 1);
-        store = list;
+        store.splice(index, 1);
+        taskStore.setTasks(store);
 
         return true;
     }
-}
+    constructor(db: DBBridgeWeb) {
+        this.db = db;
+    }
 
-let projectStore: Project[] = [];
-
-export function clearProjects() {
-    projectStore = [];
+    private db: DBBridgeWeb;
 }
 
 export class BridgeProjectDBWeb implements BridgeProjectDB {
-    async list(): Promise<Project[]> {
-        return [...projectStore];
+    async getDefaultId() {
+        return projectStore.getDefaultProjId();
     }
+
+    async list(): Promise<Project[]> {
+        return projectStore.getProjects();
+    }
+
     async add(project: Partial<Project>): Promise<void | Project> {
+        const store = projectStore.getProjects();
         const newProject = {
             ...project,
             id: String(Date.now()),
@@ -122,17 +112,18 @@ export class BridgeProjectDBWeb implements BridgeProjectDB {
             updatedAt: null,
         } as Project;
 
-        const list = [...projectStore];
-        list.push(newProject);
-        projectStore = list;
+        store.push(newProject);
+        projectStore.setProjects(store);
 
         return newProject;
     }
+
     async update(
         id: string,
         payload: Partial<Project>
     ): Promise<void | Project> {
-        const project = projectStore.find((t) => t.id === id);
+        const store = projectStore.getProjects();
+        const project = store.find((t) => t.id === id);
 
         if (!project) {
             return;
@@ -142,25 +133,30 @@ export class BridgeProjectDBWeb implements BridgeProjectDB {
             updatedAt: dayjs().format(),
         } as Required<Project>;
         Object.assign(updatedProject, project, removeUndefined(payload));
-        const index = projectStore.findIndex((t) => t.id === id);
-        const list = [...projectStore];
-        list.splice(index, 1, updatedProject);
-        projectStore = list;
+        const index = store.findIndex((t) => t.id === id);
+        store.splice(index, 1, updatedProject);
+        projectStore.setProjects(store);
 
         return updatedProject;
     }
 
     async remove(id: string): Promise<boolean> {
-        const index = projectStore.findIndex((t) => t.id === id);
+        const store = projectStore.getProjects();
+        const index = store.findIndex((t) => t.id === id);
 
         if (index < 0) {
             return false;
         }
 
-        const list = [...projectStore];
-        list.splice(index, 1);
-        projectStore = list;
+        store.splice(index, 1);
+        projectStore.setProjects(store);
 
         return true;
     }
+
+    constructor(db: DBBridgeWeb) {
+        this.db = db;
+    }
+
+    private db: DBBridgeWeb;
 }

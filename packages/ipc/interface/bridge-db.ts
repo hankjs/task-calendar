@@ -12,6 +12,8 @@ export interface BridgeProjectDB {
     add(project: Partial<Project>): Promise<Project | void>;
     update(id: string, project: Partial<Project>): Promise<Project | void>;
     remove(id: string): Promise<boolean>;
+
+    getDefaultId(): Promise<string>;
 }
 
 export interface BridgeDB {

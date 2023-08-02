@@ -3,12 +3,12 @@ import dayjs from "dayjs";
 import { useTaskStore } from "../task";
 import { setActivePinia, createPinia } from "pinia";
 import { useSetupHooks } from "@/tests/component";
-import { clearTasks } from "@task/ipc/renderer/platform/web/db";
+import { taskStore } from "@task/ipc/renderer/platform/web/db.data";
 
 describe("useTaskStore", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        clearTasks();
+        taskStore.clearTasks();
     });
 
     it("should return tasks", async () => {

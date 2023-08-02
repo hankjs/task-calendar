@@ -38,7 +38,9 @@ export function useCalendar(
             calendars: MOCK_CALENDARS,
         });
         cal.on("selectDateTime", (info: SelectDateTimeInfo) => {
-            emits("selectDateTime", info);
+            if (info.gridSelectionElements.length > 0) {
+                emits("selectDateTime", info);
+            }
             cal.clearGridSelections();
         });
         cal.on("beforeCreateEvent", (event: EventObject) => {
