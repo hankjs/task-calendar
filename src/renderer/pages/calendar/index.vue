@@ -21,8 +21,6 @@ const { tasks } = tasksHook;
 
 <style scoped>
 .calendar {
-    display: grid;
-    grid-template: 1fr / 1fr;
-    flex: 1;
+    height: 100%;
 }
 </style>

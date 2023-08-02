@@ -10,4 +10,14 @@
     --allday_title-grid: initial;
     --allday_title-justify-content: flex-end;
     --allday_title-align-items: center;
+
+    /*#region Grid */
+    --page-main-grid-template: 48px 1fr 48px / 240px 1fr;
+    --page-main-grid-template-areas:
+        "nav header"
+        "nav main"
+        "nav footer";
+    --page-main-grid-template--is-collapsed: 48px 1fr 48px / 64px 1fr;
+    --page-main-grid-template-areas--is-collapsed: var(--page-main-grid-template-areas);
+    /*#endregion */
 }
