@@ -5,15 +5,15 @@ import { useCalendarTask } from "./calendar";
 import { NButton } from "naive-ui";
 
 const tasksHook = useCalendarTask();
-const { tasks } = tasksHook;
+const { tasks, on } = tasksHook;
 </script>
 
 <template>
     <section class="calendar">
         <Calendar
             :view="ViewType.Day"
-            @select-date-time="tasksHook.on.selectDateTime"
-            @before-update-event="tasksHook.on.beforeUpdateEvent"
+            @select-date-time="on.selectDateTime"
+            @before-update-event="on.beforeUpdateEvent"
             :events="tasks"
         />
     </section>

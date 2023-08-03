@@ -11,6 +11,7 @@ import {
 import { BookOutline as BookIcon } from "@vicons/ionicons5";
 import { useConfig } from "@/components/config/hooks";
 import { RootCssVar } from "@/styles/variables";
+import HeaderComp from "@/components/header/index.vue";
 
 function renderIcon(icon: Component) {
     return () => h(NIcon, null, { default: () => h(icon) });
@@ -67,12 +68,7 @@ const menuCollapsedWidth = computed(
                 />
             </NLayoutSider>
             <NLayoutHeader class="header" :inverted="inverted" bordered>
-                Header Header Header
-                <n-menu
-                    mode="horizontal"
-                    :inverted="inverted"
-                    :options="menuOptions"
-                />
+                <HeaderComp></HeaderComp>
             </NLayoutHeader>
             <main class="main">
                 <Suspense>

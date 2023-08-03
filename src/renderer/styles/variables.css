@@ -1,5 +1,9 @@
 :root {
     --transition-snappy: all 0.3s cubic-bezier(0.07, 0.95, 0, 1);
+    /*#region Base */
+    --base-gap: 10px;
+    --base-gap-large: 20px;
+    /*#endregion */
 
     /*#region tui.Calendar */
     --milestone_title-grid: initial;
@@ -17,7 +21,15 @@
     --event-time-width: 100%;
     /*#endregion */
 
-    /*#region Grid */
+    /*#region Header */
+    --header-padding-block: 0;
+    --header-padding-inline: var(--base-gap) var(--base-gap-large);
+    --header-grid-template: 1fr / 1fr 1fr;
+    --header-grid-template-areas: "title actions";
+    --header-actions-justify-content: end;
+    /*#endregion */
+
+    /*#region PageMain */
     /** Menu Width */
     --page-main-menu-width: 200px;
     --page-main-header-height: 48px;

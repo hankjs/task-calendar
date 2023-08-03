@@ -10,12 +10,7 @@ function isPx(str: string) {
 export default defineComponent({
     setup() {
         const cssVar = reactive({});
-        provide(
-            configInjectionKey,
-            reactive({
-                cssVar,
-            })
-        );
+        provide(configInjectionKey, reactive({ cssVar }));
 
         onMounted(() => {
             const root = document.documentElement;
