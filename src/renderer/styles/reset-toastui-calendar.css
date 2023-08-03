@@ -20,3 +20,13 @@
     justify-content: var(--allday_title-justify-content);
     align-items: var(--allday_title-align-items);
 }
+
+/* .toastui-calendar-column .toastui-calendar-events {
+    overflow: hidden;
+}
+
+.toastui-calendar-event-time {
+    width: var(--event-time-width) !important;
+    box-shadow: 0 -1px 2px 1px rgba(256 256 256 / 10%),
+        -1px 0px 2px 1px rgba(256 256 256 / 10%);
+} */

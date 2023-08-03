@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { NConfigProvider, NGlobalStyle, NThemeEditor } from "naive-ui";
+import {
+    NConfigProvider,
+    NGlobalStyle,
+    NThemeEditor,
+    GlobalThemeOverrides,
+} from "naive-ui";
+import Config from "./components/config/index.vue";
+
+const themeOverrides: GlobalThemeOverrides = {};
 </script>
 <template>
-    <NConfigProvider>
-        <NThemeEditor>
-            <NGlobalStyle />
-            <router-view />
-        </NThemeEditor>
-    </NConfigProvider>
+    <Config>
+        <NConfigProvider :theme-overrides="themeOverrides">
+            <NThemeEditor>
+                <NGlobalStyle />
+                <router-view />
+            </NThemeEditor>
+        </NConfigProvider>
+    </Config>
 </template>
