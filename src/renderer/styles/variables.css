@@ -50,4 +50,9 @@
         --page-main-grid-template-areas
     );
     /*#endregion */
+
+    /*#region Drawer */
+    --drawer-width: 300px;
+    --drawer-width-complex: 500px;
+    /*#endregion */
 }

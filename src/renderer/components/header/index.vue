@@ -22,6 +22,7 @@ const headerStore = useHeaderStore();
                 :key="action.key"
                 :type="action.type"
                 :action-props="action.props"
+                :exec="action.exec"
             ></HeaderAction>
 
             <template v-if="headerStore.rightFixed.length">
@@ -32,6 +33,7 @@ const headerStore = useHeaderStore();
                     :key="action.key"
                     :type="action.type"
                     :action-props="action.props"
+                    :exec="action.exec"
                 ></HeaderAction>
             </template>
         </div>

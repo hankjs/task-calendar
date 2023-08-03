@@ -11,13 +11,6 @@ import {
     SelectDateTimeInfo,
     UpdatedEventInfo,
 } from "./props";
-import {
-    useHeaderStore,
-    HaederActionPosition,
-    HeaderActionType,
-    onRegisterHeaderAction,
-} from "@/store/header";
-import { icons, renderIcon } from "../icons/render";
 
 const props = defineProps<{
     view?: ViewType;
@@ -37,19 +30,6 @@ const emits = defineEmits<{
 
 const refCalendar = ref<Element | null>(null);
 useCalendar(refCalendar as Ref<Element | null>, props, emits);
-const headerStore = useHeaderStore();
-onRegisterHeaderAction(HaederActionPosition.Right, {
-    key: "calendar-add-project",
-    type: HeaderActionType.Icon,
-    props: {
-        circle: true,
-        text: true,
-        renderIcon: () => renderIcon(icons.fluent.AppFolder24Filled),
-        onClick() {
-            console.log("click");
-        },
-    },
-});
 </script>
 
 <template>

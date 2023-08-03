@@ -21,7 +21,6 @@ export function useCalendar(
     const calendar = shallowRef<Calendar | null>(null);
 
     function renderEvents(events?: EventObject[]) {
-        console.log("events", events);
         calendar.value?.clear();
         if (!events) {
             return;

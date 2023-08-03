@@ -1,32 +1,31 @@
+import { HeaderAction } from "@/composables/action";
 import { defineStore } from "pinia";
-import { onMounted, onUnmounted, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 export enum HeaderActionType {
     Button = "button",
     Icon = "icon",
     Text = "text",
 }
-export type HeaderActions = {
-    key: string;
-    type: HeaderActionType;
-    props: any;
-};
 
-export enum HaederActionPosition {
+export enum HeaderPosition {
     Left = "left",
     Right = "right",
+    RightFixed = "rightFixed",
 }
 
 export const useHeaderStore = defineStore("header", () => {
-    const left = shallowRef<HeaderActions[]>([]);
-    const right = shallowRef<HeaderActions[]>([]);
-    const rightFixed = shallowRef<HeaderActions[]>([]);
+    const left = shallowRef<HeaderAction[]>([]);
+    const right = shallowRef<HeaderAction[]>([]);
+    const rightFixed = shallowRef<HeaderAction[]>([]);
+    const positionMap = {
+        [HeaderPosition.Left]: left,
+        [HeaderPosition.Right]: right,
+        [HeaderPosition.RightFixed]: rightFixed,
+    };
 
-    function registerAction(
-        position: HaederActionPosition,
-        action: HeaderActions
-    ) {
-        const list = position === HaederActionPosition.Left ? left : right;
+    function registerAction(position: HeaderPosition, action: HeaderAction) {
+        const list = positionMap[position];
         const actions = Array.from(list.value);
         const index = actions.findIndex((item) => item.key === action.key);
         if (index !== -1) {
@@ -37,11 +36,8 @@ export const useHeaderStore = defineStore("header", () => {
         list.value = actions;
     }
 
-    function unregisterAction(
-        position: HaederActionPosition,
-        action: HeaderActions
-    ) {
-        const list = position === HaederActionPosition.Left ? left : right;
+    function unregisterAction(position: HeaderPosition, action: HeaderAction) {
+        const list = position === HeaderPosition.Left ? left : right;
         const actions = Array.from(list.value);
         const index = actions.findIndex((item) => item.key === action.key);
         if (index !== -1) {
@@ -61,18 +57,3 @@ export const useHeaderStore = defineStore("header", () => {
         },
     };
 });
-
-export const onRegisterHeaderAction = (
-    position: HaederActionPosition,
-    action: HeaderActions
-) => {
-    const store = useHeaderStore();
-
-    onMounted(() => {
-        store.a.registerAction(position, action);
-    });
-
-    onUnmounted(() => {
-        store.a.unregisterAction(position, action);
-    });
-};

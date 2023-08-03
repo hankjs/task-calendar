@@ -1,11 +1,17 @@
 <script lang="ts" setup>
 import { HeaderActionType } from "@/store/header";
 import { NButton } from "naive-ui";
+import { computed } from "vue";
 import { h } from "vue";
 
 const props = defineProps<{
     type: HeaderActionType;
-    actionProps: any;
+    actionProps?: {
+        render?: () => any;
+        [k: string]: any;
+    };
+    execEvent?: string;
+    exec?: () => void;
 }>();
 
 const actionComponentMap = {
@@ -14,6 +20,8 @@ const actionComponentMap = {
     [HeaderActionType.Text]: (props: any) =>
         h(props.at ?? "span", props, props.render()),
 };
+
+const execEvent = computed(() => props.execEvent ?? "click");
 </script>
 
 <template>
@@ -22,6 +30,7 @@ const actionComponentMap = {
         :class="[`header-action-item--${props.type}`]"
         :is="actionComponentMap[props.type]"
         v-bind="actionProps"
+        v-on="{ [execEvent]: props.exec }"
         >{{
             props.actionProps?.render ? props.actionProps.render() : null
         }}</component
