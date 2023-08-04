@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useHeaderStore, HeaderActionType } from "@/store/header";
+import { useHeaderStore, HeaderActionType } from "./store";
 import HeaderAction from "./action.vue";
 import { NDivider } from "naive-ui";
 

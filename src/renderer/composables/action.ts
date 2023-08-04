@@ -3,10 +3,10 @@ import {
     HeaderActionType,
     HeaderPosition,
     useHeaderStore,
-} from "@/store/header";
+} from "@/components/header/store";
 import { onMounted, onUnmounted } from "vue";
 
-export { HeaderActionType, HeaderPosition } from "@/store/header";
+export { HeaderActionType, HeaderPosition } from "@/components/header/store";
 
 export type HeaderAction = {
     key: string;

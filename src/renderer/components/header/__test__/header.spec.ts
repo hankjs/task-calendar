@@ -1,10 +1,6 @@
 import { it, expect, vi, describe, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
-import {
-    useHeaderStore,
-    HeaderActionType,
-    HeaderPosition,
-} from "@/store/header";
+import { useHeaderStore, HeaderActionType, HeaderPosition } from "../store";
 
 describe("Header Store", () => {
     beforeEach(() => {

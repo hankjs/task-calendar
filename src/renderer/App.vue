@@ -4,6 +4,7 @@ import {
     NGlobalStyle,
     NThemeEditor,
     GlobalThemeOverrides,
+    NMessageProvider,
 } from "naive-ui";
 import Config from "./components/config/index.vue";
 import Project from "./components/project/index.vue";
@@ -20,6 +21,8 @@ const themeOverrides: GlobalThemeOverrides = {};
         </NConfigProvider>
 
         <!-- Global Commnd or Header Fixed Actions -->
-        <Project />
+        <NMessageProvider>
+            <Project />
+        </NMessageProvider>
     </Config>
 </template>

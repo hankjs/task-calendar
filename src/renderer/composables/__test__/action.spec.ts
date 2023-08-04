@@ -5,7 +5,7 @@ import {
     useHeaderStore,
     HeaderActionType,
     HeaderPosition,
-} from "@/store/header";
+} from "@/components/header/store";
 import { useCommandStore } from "@/store/command";
 import {
     onRegisterCommand,

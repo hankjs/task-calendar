@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { HeaderActionType } from "@/store/header";
+import { HeaderActionType } from "@/components/header/store";
 import { NButton } from "naive-ui";
 import { computed } from "vue";
 import { h } from "vue";

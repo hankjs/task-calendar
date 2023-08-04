@@ -52,7 +52,7 @@
     /*#endregion */
 
     /*#region Drawer */
-    --drawer-width: 300px;
-    --drawer-width-complex: 500px;
+    --drawer-width: 500px;
+    --drawer-width-complex: 700px;
     /*#endregion */
 }

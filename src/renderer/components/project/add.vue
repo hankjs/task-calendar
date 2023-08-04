@@ -1,165 +1,167 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-import { NDrawer, NDrawerContent, NButton } from "naive-ui";
+import { computed, ref, shallowRef } from "vue";
+import {
+    NDrawer,
+    NDrawerContent,
+    NButton,
+    NForm,
+    NFormItem,
+    NInput,
+    FormInst,
+    FormRules,
+    NColorPicker,
+} from "naive-ui";
 import { RootCssVar } from "@/styles/variables";
 import { useConfig } from "@/components/config/hooks";
 import { t } from "@task/lang";
 import { useProjectStore } from "@/store/project";
+import { Project } from "@task/model";
 
-import {
-    FormInst,
-    FormItemInst,
-    FormItemRule,
-    useMessage,
-    FormRules,
-    NMessageProvider,
-} from "naive-ui";
+const defaultModel = () => ({
+    name: "",
+    id: undefined,
+    color: "",
+    backgroundColor: "",
+    dragBackgroundColor: "",
+    borderColor: "",
+});
 const show = ref(false);
+const isEdit = ref(false);
+const title = computed(() => {
+    return isEdit.value ? t("Edit Project") : t("Add Project");
+});
 
 const { cssVar } = useConfig();
 const width = computed(() => cssVar[RootCssVar.Drawer["--drawer-width"]]);
+const modes: any[] = ["rgb", "hex", "hsl", "hsv"];
 
 const store = useProjectStore();
-function onOpen() {
-    show.value = true;
-}
-
-interface ModelType {
-    age: string | null;
-    password: string | null;
-    reenteredPassword: string | null;
-}
+const openResolve = shallowRef<(project: Project) => void>(Promise.resolve);
+const openReject = shallowRef<(project?: any) => void>(() => {});
 
 const formRef = ref<FormInst | null>(null);
-const rPasswordFormItemRef = ref<FormItemInst | null>(null);
-const message = useMessage();
-const modelRef = ref<ModelType>({
-    age: null,
-    password: null,
-    reenteredPassword: null,
-});
-function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
-    return (
-        !!modelRef.value.password &&
-        modelRef.value.password.startsWith(value) &&
-        modelRef.value.password.length >= value.length
-    );
-}
-function validatePasswordSame(rule: FormItemRule, value: string): boolean {
-    return value === modelRef.value.password;
-}
+const modelRef = ref<Partial<Project>>(defaultModel());
+
 const rules: FormRules = {
-    age: [
+    name: [
         {
             required: true,
-            validator(rule: FormItemRule, value: string) {
-                if (!value) {
-                    return new Error("需要年龄");
-                } else if (!/^\d*$/.test(value)) {
-                    return new Error("年龄应该为整数");
-                } else if (Number(value) < 18) {
-                    return new Error("年龄应该超过十八岁");
-                }
-                return true;
-            },
-            trigger: ["input", "blur"],
-        },
-    ],
-    password: [
-        {
-            required: true,
-            message: "请输入密码",
-        },
-    ],
-    reenteredPassword: [
-        {
-            required: true,
-            message: "请再次输入密码",
-            trigger: ["input", "blur"],
-        },
-        {
-            validator: validatePasswordStartWith,
-            message: "两次密码输入不一致",
-            trigger: "input",
-        },
-        {
-            validator: validatePasswordSame,
-            message: "两次密码输入不一致",
-            trigger: ["blur", "password-input"],
+            message: t("Required"),
         },
     ],
 };
 
-function handlePasswordInput() {
-    if (modelRef.value.reenteredPassword) {
-        rPasswordFormItemRef.value?.validate({ trigger: "password-input" });
+async function onOpen(project?: Project) {
+    isEdit.value = !!project;
+    show.value = true;
+    console.log("modelRef.value", modelRef.value);
+    /** edit */
+    if (!project) {
+        return;
     }
-}
-function handleValidateButtonClick(e: MouseEvent) {
-    e.preventDefault();
-    formRef.value?.validate((errors) => {
-        if (!errors) {
-            message.success("验证成功");
-        } else {
-            console.log(errors);
-            message.error("验证失败");
-        }
+
+    modelRef.value = {
+        ...project,
+    };
+
+    return new Promise<Project>((resolve, reject) => {
+        openResolve.value = resolve;
+        openReject.value = reject;
     });
 }
+
+async function onFinish(e: MouseEvent) {
+    e.preventDefault();
+    await formRef.value?.validate();
+    try {
+        if (isEdit.value) {
+            const res = await store.a.update(
+                modelRef.value.id!,
+                modelRef.value as Project
+            );
+            openResolve.value(res);
+        } else {
+            await store.a.add(modelRef.value as Project);
+        }
+        show.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function onAfterLeave() {
+    openReject.value();
+    modelRef.value = defaultModel();
+    isEdit.value = false;
+    openResolve.value = Promise.resolve;
+    openReject.value = () => {};
+}
+
+defineExpose({
+    open: onOpen,
+});
 </script>
 
 <template>
-    <NButton type="primary" @click="onOpen">{{ t("Add") }}</NButton>
+    <NButton type="primary" @click="onOpen()">{{ t("Add") }}</NButton>
 
-    <NMessageProvider>
-        <NDrawer v-model:show="show" :width="width">
-            <NDrawerContent :title="t('Add Project')">
-                <n-form ref="formRef" :model="modelRef" :rules="rules">
-                    <n-form-item path="age" label="年龄">
-                        <n-input
-                            v-model:value="modelRef.age"
-                            @keydown.enter.prevent
-                        />
-                    </n-form-item>
-                    <n-form-item path="password" label="密码">
-                        <n-input
-                            v-model:value="modelRef.password"
-                            type="password"
-                            @input="handlePasswordInput"
-                            @keydown.enter.prevent
-                        />
-                    </n-form-item>
-                    <n-form-item
-                        ref="rPasswordFormItemRef"
-                        first
-                        path="reenteredPassword"
-                        label="重复密码"
-                    >
-                        <n-input
-                            v-model:value="modelRef.reenteredPassword"
-                            :disabled="!modelRef.password"
-                            type="password"
-                            @keydown.enter.prevent
-                        />
-                    </n-form-item>
-                    <n-row :gutter="[0, 24]">
-                        <n-col :span="24">
-                            <div
-                                style="display: flex; justify-content: flex-end"
-                            >
-                                <n-button
-                                    :disabled="modelRef.age === null"
-                                    round
-                                    type="primary"
-                                    @click="handleValidateButtonClick"
-                                >
-                                    验证
-                                </n-button>
-                            </div>
-                        </n-col>
-                    </n-row>
-                </n-form>
-            </NDrawerContent>
-        </NDrawer>
-    </NMessageProvider>
+    <NDrawer v-model:show="show" @after-leave="onAfterLeave" :width="width">
+        <NDrawerContent :title="title">
+            <NForm ref="formRef" :model="modelRef" :rules="rules">
+                <NFormItem path="name" :label="t('Name')">
+                    <NInput
+                        v-model:value="modelRef.name"
+                        @keydown.enter.prevent
+                        :placeholder="t('Please Input')"
+                    />
+                </NFormItem>
+
+                <NFormItem path="color" :label="t('Color')">
+                    <NColorPicker
+                        v-model:value="modelRef.color"
+                        :modes="modes"
+                        :actions="['clear']"
+                        show-preview
+                    />
+                </NFormItem>
+                <NFormItem path="backgroundColor" :label="t('BackgroundColor')">
+                    <NColorPicker
+                        v-model:value="modelRef.backgroundColor"
+                        :modes="modes"
+                        :actions="['clear']"
+                        show-preview
+                    />
+                </NFormItem>
+                <NFormItem
+                    path="dragBackgroundColor"
+                    :label="t('DragBackgroundColor')"
+                >
+                    <NColorPicker
+                        v-model:value="modelRef.dragBackgroundColor"
+                        :modes="modes"
+                        :actions="['clear']"
+                        show-preview
+                    />
+                </NFormItem>
+                <NFormItem path="borderColor" :label="t('BorderColor')">
+                    <NColorPicker
+                        v-model:value="modelRef.borderColor"
+                        :modes="modes"
+                        :actions="['clear']"
+                        show-preview
+                    />
+                </NFormItem>
+            </NForm>
+
+            <template #footer>
+                <NButton
+                    :disabled="modelRef.name === ''"
+                    type="primary"
+                    @click="onFinish"
+                >
+                    {{ t("Save") }}
+                </NButton>
+            </template>
+        </NDrawerContent>
+    </NDrawer>
 </template>
