@@ -6,13 +6,12 @@ const props = defineProps<{
     project: Project;
 }>();
 const style = computed(() => {
-    const isDark = !!props.project.dragBackgroundColor;
     return {
-        color: props.project.color || (isDark ? "white" : "black"),
-        borderColor: props.project.borderColor,
-        backgroundColor: isDark
-            ? props.project.dragBackgroundColor
-            : props.project.backgroundColor,
+        color: props.project.color,
+        borderLeftColor: props.project.borderColor,
+        borderRightColor:
+            props.project.dragBackgroundColor || props.project.backgroundColor,
+        backgroundColor: props.project.backgroundColor,
     };
 });
 </script>
@@ -28,6 +27,7 @@ const style = computed(() => {
     height: 100%;
     border-radius: 2px;
     border-left: 3px solid rgb(0, 0, 0);
+    border-right: 10px solid rgb(161, 181, 108);
     margin-left: 0px;
     color: rgb(0, 0, 0);
     background-color: rgb(161, 181, 108);

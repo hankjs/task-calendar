@@ -11,6 +11,9 @@ export const useProjectStore = defineStore("project", () => {
     const rProjects = useRequest(db.project.list.bind(db.project), {
         manual: true,
     });
+    const rDefaultId = useRequest(db.project.getDefaultId.bind(db.project), {
+        manual: true,
+    });
 
     //#region Actions
     async function list() {
@@ -33,11 +36,16 @@ export const useProjectStore = defineStore("project", () => {
     async function remove(id: string) {
         await db.project.remove(id);
     }
+
+    async function defaultId() {
+        return db.project.getDefaultId();
+    }
     //#endregion Actions
 
     return {
         //#region State
         projects: rProjects.data,
+        defaultId: rDefaultId.data,
         //#endregion State
 
         /** Actions */
@@ -46,6 +54,7 @@ export const useProjectStore = defineStore("project", () => {
             add,
             update,
             remove,
+            defaultId,
         },
     };
 });

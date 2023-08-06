@@ -2,10 +2,9 @@ import { Action } from "@/composables/action";
 import { defineStore } from "pinia";
 import { shallowRef } from "vue";
 
-export enum CommandCommandType {
-    Button = "button",
-    Icon = "icon",
-    Text = "text",
+export enum CommandKey {
+    CalendarAddEvent = "CalendarAddEvent",
+    CalendarAddProject = "CalendarAddProject",
 }
 
 export const useCommandStore = defineStore("command", () => {
@@ -31,12 +30,20 @@ export const useCommandStore = defineStore("command", () => {
         }
     }
 
+    function dispatch(key: CommandKey, payload: any) {
+        const cmd = commands.value.find((item) => item.key === key);
+        if (cmd) {
+            cmd.exec!(payload);
+        }
+    }
+
     return {
         commands,
 
         a: {
             registerCommand,
             unregisterCommand,
+            dispatch,
         },
     };
 });

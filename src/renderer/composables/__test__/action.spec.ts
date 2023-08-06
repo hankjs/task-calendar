@@ -73,4 +73,23 @@ describe("Action Redister helper", () => {
         expect(commandStore.commands).not.toContainEqual(action);
         expect(headerStore.commands).not.toContainEqual(action);
     });
+
+    describe("Contextmenu action", () => {
+        it("registers and unregisters contextmenu action", () => {
+            const store = useCommandStore();
+            const action = {
+                key: "test-action",
+                exec() {},
+            };
+
+            const { $vm } = useSetupHooks(() => {
+                onRegisterCommand(action);
+            });
+
+            expect(store.commands).toContainEqual(action);
+
+            $vm.unmount();
+            expect(store.commands).not.toContainEqual(action);
+        });
+    });
 });

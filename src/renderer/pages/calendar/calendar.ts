@@ -1,5 +1,6 @@
 import { useTaskStore } from "@/store/task";
 import {
+    EventInfo,
     SelectDateTimeInfo,
     UpdatedEventInfo,
 } from "@/components/calendar/props";
@@ -21,6 +22,14 @@ export function useCalendarTask() {
         await taskStore.a.update(info.event.id, info.changes);
         await taskStore.a.list();
     }
+
+    async function clickEvent(info: EventInfo) {
+        console.log(info);
+    }
+
+    async function hoverEvent(info: EventInfo) {
+        console.log(info);
+    }
     //#endregion Handlers
 
     return {
@@ -29,6 +38,8 @@ export function useCalendarTask() {
         on: {
             selectDateTime,
             beforeUpdateEvent,
+            clickEvent,
+            hoverEvent,
         },
     };
 }

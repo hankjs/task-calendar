@@ -40,4 +40,6 @@ export type CalendarEmits = {
     (e: "clickEvent", eventInfo: EventInfo): void
     (e: "clickMoreEventsBtn", info: MoreEventsButton): void
     (e: "clickTimezonesCollapseBtn", prevCollapsedState: boolean): void
+    (e: "clickEvent", eventInfo: EventInfo): void;
+    (e: "hoverEvent", eventInfo: EventInfo): void;
 };

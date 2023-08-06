@@ -11,6 +11,10 @@ import {
     SelectDateTimeInfo,
     UpdatedEventInfo,
 } from "./props";
+import { useEventListener } from "@vueuse/core";
+import { throttle } from "lodash-es";
+import ContextmenuPopselect from "./contextmenu-popselect.vue";
+import { findTimeElement } from "./helper";
 
 const props = defineProps<{
     view?: ViewType;
@@ -26,18 +30,53 @@ const emits = defineEmits<{
     (e: "clickEvent", eventInfo: EventInfo): void;
     (e: "clickMoreEventsBtn", moreEventsBtnInfo: MoreEventsButton): void;
     (e: "clickTimezonesCollapseBtn", prevCollapsedState: boolean): void;
+    (e: "clickEvent", eventInfo: EventInfo): void;
+    (e: "hoverEvent", eventInfo: EventInfo): void;
 }>();
 
 const refCalendar = ref<Element | null>(null);
-useCalendar(refCalendar as Ref<Element | null>, props, emits);
+const { calendar } = useCalendar(
+    refCalendar as Ref<Element | null>,
+    props,
+    emits
+);
+
+useEventListener(
+    refCalendar,
+    "mousemove",
+    throttle((e: MouseEvent) => {
+        if (!e.target || !e.ctrlKey) return;
+        const target = e.target as HTMLElement;
+        let parent = findTimeElement(target);
+        if (!parent) {
+            return;
+        }
+
+        const event = calendar.value?.getEvent(
+            parent.dataset.eventId as string,
+            parent.dataset.calendarId as string
+        );
+        if (!event) {
+            return;
+        }
+
+        emits("hoverEvent", {
+            event,
+            nativeEvent: e,
+        });
+    }, 500)
+);
 </script>
 
 <template>
-    <div class="calendar" ref="refCalendar"></div>
+    <ContextmenuPopselect :calendar="calendar">
+        <div class="calendar" ref="refCalendar"></div>
+    </ContextmenuPopselect>
 </template>
 
 <style>
 .calendar {
+    height: 100%;
     overflow-y: auto;
 }
 </style>

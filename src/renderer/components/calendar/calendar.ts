@@ -2,7 +2,6 @@ import { Ref, shallowRef, watch } from "vue";
 import Calendar, { EventObject } from "@toast-ui/calendar";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 import { DEFAULT_CONFIG, ViewType } from "@task/config/calendar";
-import { MOCK_CALENDARS } from "./mock-data";
 import {
     CalendarEmits,
     CalendarProps,
@@ -12,6 +11,7 @@ import {
     SelectDateTimeInfo,
     UpdatedEventInfo,
 } from "./props";
+import { useProjectStore } from "@/store/project";
 
 export function useCalendar(
     refEl: Ref<Element | null>,
@@ -19,6 +19,7 @@ export function useCalendar(
     emits: CalendarEmits
 ) {
     const calendar = shallowRef<Calendar | null>(null);
+    const projectStore = useProjectStore();
 
     function renderEvents(events?: EventObject[]) {
         calendar.value?.clear();
@@ -28,13 +29,14 @@ export function useCalendar(
         calendar.value?.createEvents(events);
     }
 
-    function renderCalendar(el: Element | null) {
+    async function renderCalendar(el: Element | null) {
         if (!el) {
             return;
         }
+        const calendars = await projectStore.a.list();
         const cal = new Calendar(el as Element, {
             ...DEFAULT_CONFIG,
-            calendars: MOCK_CALENDARS,
+            calendars,
         });
         cal.on("selectDateTime", (info: SelectDateTimeInfo) => {
             if (info.gridSelectionElements.length > 0) {
@@ -86,6 +88,16 @@ export function useCalendar(
     watch(() => props.events, renderEvents);
 
     watch(() => refEl.value, renderCalendar);
+
+    watch(
+        () => projectStore.projects,
+        (calendars) => {
+            if (!calendars) {
+                return;
+            }
+            calendar.value?.setCalendars(calendars);
+        }
+    );
 
     return {
         calendar,

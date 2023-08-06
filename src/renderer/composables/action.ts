@@ -5,6 +5,7 @@ import {
     useHeaderStore,
 } from "@/components/header/store";
 import { onMounted, onUnmounted } from "vue";
+import { useContextmenuStore } from "@/components/calendar/contextmenu.store";
 
 export { HeaderActionType, HeaderPosition } from "@/components/header/store";
 
@@ -15,15 +16,21 @@ export type HeaderAction = {
         render?: () => any;
         [k: string]: any;
     };
-    exec?: () => void;
+    exec?: (payload?: any) => void;
 };
 
 export type CommandAction = {
     key: string;
-    exec: () => void;
+    exec: (payload?: any) => void;
 };
 
-export type Action = HeaderAction | CommandAction;
+export type ContextmenuAction = {
+    key: string;
+    label?: string;
+    exec: (payload?: any) => void;
+};
+
+export type Action = HeaderAction | CommandAction | ContextmenuAction;
 
 export const onRegisterHeaderAction = (
     position: HeaderPosition,
@@ -49,6 +56,18 @@ export const onRegisterCommand = (command: Action) => {
 
     onUnmounted(() => {
         store.a.unregisterCommand(command);
+    });
+};
+
+export const onRegisterContextmenu = (action: Action) => {
+    const store = useContextmenuStore();
+
+    onMounted(() => {
+        store.a.registerContextmenu(action as ContextmenuAction);
+    });
+
+    onUnmounted(() => {
+        store.a.registerContextmenu(action as ContextmenuAction);
     });
 };
 

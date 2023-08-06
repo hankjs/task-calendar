@@ -10,16 +10,19 @@ export enum HeaderActionType {
 
 export enum HeaderPosition {
     Left = "left",
+    LeftFixed = "leftFixed",
     Right = "right",
     RightFixed = "rightFixed",
 }
 
 export const useHeaderStore = defineStore("header", () => {
     const left = shallowRef<HeaderAction[]>([]);
+    const leftFixed = shallowRef<HeaderAction[]>([]);
     const right = shallowRef<HeaderAction[]>([]);
     const rightFixed = shallowRef<HeaderAction[]>([]);
     const positionMap = {
         [HeaderPosition.Left]: left,
+        [HeaderPosition.LeftFixed]: leftFixed,
         [HeaderPosition.Right]: right,
         [HeaderPosition.RightFixed]: rightFixed,
     };
@@ -48,6 +51,7 @@ export const useHeaderStore = defineStore("header", () => {
 
     return {
         left,
+        leftFixed,
         right,
         rightFixed,
 

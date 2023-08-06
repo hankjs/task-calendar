@@ -2,7 +2,6 @@
 import Calendar from "@/components/calendar/index.vue";
 import { ViewType } from "@task/config/calendar";
 import { useCalendarTask } from "./calendar";
-import { NButton } from "naive-ui";
 
 const tasksHook = useCalendarTask();
 const { tasks, on } = tasksHook;
@@ -14,6 +13,8 @@ const { tasks, on } = tasksHook;
             :view="ViewType.Day"
             @select-date-time="on.selectDateTime"
             @before-update-event="on.beforeUpdateEvent"
+            @click-event="on.clickEvent"
+            @hover-event="on.hoverEvent"
             :events="tasks"
         />
     </section>

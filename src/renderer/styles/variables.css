@@ -19,6 +19,8 @@
     --allday_title-align-items: center;
 
     --event-time-width: 100%;
+
+    --contextmenu-min-width: 200px;
     /*#endregion */
 
     /*#region Header */

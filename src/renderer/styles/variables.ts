@@ -23,6 +23,8 @@ export const RootCssVar = {
         "--allday_title-align-items": "--allday_title-align-items",
 
         "--event-time-width": "--event-time-width",
+
+        "--contextmenu-min-width": "--contextmenu-min-width",
     },
 
     Headers: {

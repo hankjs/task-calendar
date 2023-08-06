@@ -9,13 +9,17 @@ import {
     NInput,
     FormInst,
     FormRules,
-    NColorPicker,
 } from "naive-ui";
 import { RootCssVar } from "@/styles/variables";
 import { useConfig } from "@/components/config/hooks";
 import { t } from "@task/lang";
 import { useProjectStore } from "@/store/project";
 import { Project } from "@task/model";
+import Color from "@/components/color/index.vue";
+
+const props = defineProps<{
+    refresh: () => void;
+}>();
 
 const defaultModel = () => ({
     name: "",
@@ -33,7 +37,6 @@ const title = computed(() => {
 
 const { cssVar } = useConfig();
 const width = computed(() => cssVar[RootCssVar.Drawer["--drawer-width"]]);
-const modes: any[] = ["rgb", "hex", "hsl", "hsv"];
 
 const store = useProjectStore();
 const openResolve = shallowRef<(project: Project) => void>(Promise.resolve);
@@ -84,6 +87,7 @@ async function onFinish(e: MouseEvent) {
             await store.a.add(modelRef.value as Project);
         }
         show.value = false;
+        props.refresh();
     } catch (error) {
         console.error(error);
     }
@@ -116,41 +120,7 @@ defineExpose({
                     />
                 </NFormItem>
 
-                <NFormItem path="color" :label="t('Color')">
-                    <NColorPicker
-                        v-model:value="modelRef.color"
-                        :modes="modes"
-                        :actions="['clear']"
-                        show-preview
-                    />
-                </NFormItem>
-                <NFormItem path="backgroundColor" :label="t('BackgroundColor')">
-                    <NColorPicker
-                        v-model:value="modelRef.backgroundColor"
-                        :modes="modes"
-                        :actions="['clear']"
-                        show-preview
-                    />
-                </NFormItem>
-                <NFormItem
-                    path="dragBackgroundColor"
-                    :label="t('DragBackgroundColor')"
-                >
-                    <NColorPicker
-                        v-model:value="modelRef.dragBackgroundColor"
-                        :modes="modes"
-                        :actions="['clear']"
-                        show-preview
-                    />
-                </NFormItem>
-                <NFormItem path="borderColor" :label="t('BorderColor')">
-                    <NColorPicker
-                        v-model:value="modelRef.borderColor"
-                        :modes="modes"
-                        :actions="['clear']"
-                        show-preview
-                    />
-                </NFormItem>
+                <Color :model="modelRef" />
             </NForm>
 
             <template #footer>

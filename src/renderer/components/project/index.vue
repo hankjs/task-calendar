@@ -18,12 +18,13 @@ import { useProjectStore } from "@/store/project";
 import AddProject from "./add.vue";
 import PreviewProject from "./preview.vue";
 import { Project } from "@task/model";
+import { CommandKey } from "@/store/command";
 
 const show = ref(false);
 const refAddProject = ref<typeof AddProject | null>(null);
 
 onRegisterHeaderAndCommand(HeaderPosition.RightFixed, {
-    key: "calendar-add-project",
+    key: CommandKey.CalendarAddProject,
     type: HeaderActionType.Icon,
     props: {
         text: true,
@@ -38,15 +39,17 @@ const { cssVar } = useConfig();
 const width = computed(() => cssVar[RootCssVar.Drawer["--drawer-width"]]);
 
 const store = useProjectStore();
-store.a.list();
+
+function onRefresh() {
+    store.a.list();
+}
 
 async function onEdit(project: Project) {
     await refAddProject.value?.open(project);
-    store.a.list();
 }
 async function onRemove(project: Project) {
     await store.a.remove(project.id);
-    store.a.list();
+    onRefresh();
 }
 </script>
 
@@ -58,7 +61,7 @@ async function onRemove(project: Project) {
                     <div>{{ t("Project") }}</div>
 
                     <div>
-                        <AddProject ref="refAddProject" />
+                        <AddProject ref="refAddProject" :refresh="onRefresh" />
                     </div>
                 </div>
             </template>
@@ -73,7 +76,7 @@ async function onRemove(project: Project) {
                     </PreviewProject>
 
                     <template style="flex: 0 0 auto" #suffix>
-                        <NSpace>
+                        <NSpace :wrap="false">
                             <NButton @click="onEdit(p)">{{
                                 t("Edit")
                             }}</NButton>

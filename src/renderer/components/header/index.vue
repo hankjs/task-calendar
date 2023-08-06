@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useHeaderStore, HeaderActionType } from "./store";
+import { useHeaderStore } from "./store";
 import HeaderAction from "./action.vue";
 import { NDivider } from "naive-ui";
 
@@ -10,11 +10,24 @@ const headerStore = useHeaderStore();
     <header class="header">
         <div class="header-title">
             <HeaderAction
-                :type="HeaderActionType.Text"
-                :action-props="{
-                    render: () => '本日待办',
-                }"
+                v-for="action in headerStore.leftFixed"
+                :key="action.key"
+                :type="action.type"
+                :action-props="action.props"
+                :exec="action.exec"
             ></HeaderAction>
+
+            <template v-if="headerStore.left.length">
+                <NDivider vertical />
+
+                <HeaderAction
+                    v-for="action in headerStore.left"
+                    :key="action.key"
+                    :type="action.type"
+                    :action-props="action.props"
+                    :exec="action.exec"
+                ></HeaderAction>
+            </template>
         </div>
         <div class="header-actions">
             <HeaderAction
