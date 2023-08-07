@@ -12,6 +12,8 @@ import { BookOutline as BookIcon } from "@vicons/ionicons5";
 import { useConfig } from "@/components/config/hooks";
 import { RootCssVar } from "@/styles/variables";
 import HeaderComp from "@/components/header/index.vue";
+import { getPanelClass } from "@/components/contextmenu-popselect/contextmenu";
+import { Panel } from "@/store/contextmenu";
 
 function renderIcon(icon: Component) {
     return () => h(NIcon, null, { default: () => h(icon) });
@@ -50,6 +52,7 @@ const menuCollapsedWidth = computed(
         >
             <NLayoutSider
                 class="nav"
+                :class="getPanelClass(Panel.Menu)"
                 bordered
                 show-trigger
                 :collapsed="isCollapse"
@@ -67,7 +70,12 @@ const menuCollapsedWidth = computed(
                     :options="menuOptions"
                 />
             </NLayoutSider>
-            <NLayoutHeader class="header" :inverted="inverted" bordered>
+            <NLayoutHeader
+                class="header"
+                :class="getPanelClass(Panel.Header)"
+                :inverted="inverted"
+                bordered
+            >
                 <HeaderComp></HeaderComp>
             </NLayoutHeader>
             <main class="main">
@@ -75,7 +83,12 @@ const menuCollapsedWidth = computed(
                     <router-view />
                 </Suspense>
             </main>
-            <NLayoutFooter class="footer" :inverted="inverted" bordered>
+            <NLayoutFooter
+                class="footer"
+                :class="getPanelClass(Panel.Footer)"
+                :inverted="inverted"
+                bordered
+            >
                 Footer Footer Footer
             </NLayoutFooter>
         </div>

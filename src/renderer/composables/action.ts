@@ -5,11 +5,7 @@ import {
     useHeaderStore,
 } from "@/components/header/store";
 import { onMounted, onUnmounted } from "vue";
-import {
-    ContextmenuFilter,
-    ContextmenuType,
-    useContextmenuStore,
-} from "@/store/contextmenu";
+import { ContextmenuFilter, useContextmenuStore } from "@/store/contextmenu";
 
 export { HeaderActionType, HeaderPosition } from "@/components/header/store";
 

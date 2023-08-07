@@ -4,14 +4,9 @@ import { NPopselect } from "naive-ui";
 import { useContextmenu } from "./contextmenu";
 import Calendar from "@toast-ui/calendar";
 import { RootCssVar } from "@/styles/variables";
-
-const props = defineProps<{
-    calendar: Calendar | null;
-}>();
-
 const refContainer = ref<Element | null>(null);
 
-const { show, options, data, on } = useContextmenu(refContainer, props);
+const { show, options, data, on } = useContextmenu(refContainer);
 </script>
 
 <template>

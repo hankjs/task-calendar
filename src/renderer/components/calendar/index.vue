@@ -13,7 +13,6 @@ import {
 } from "./props";
 import { useEventListener } from "@vueuse/core";
 import { throttle } from "lodash-es";
-import ContextmenuPopselect from "./contextmenu-popselect.vue";
 import { findTimeElement } from "./helper";
 import {
     ActionKey,
@@ -23,6 +22,11 @@ import {
 } from "@/composables/action";
 import { icons, renderIcon } from "../icons/render";
 import { NSelect } from "naive-ui";
+import { getPanelClass } from "@/components/contextmenu-popselect/contextmenu";
+import { Panel } from "@/store/contextmenu";
+import { onRegisterContextmenu } from "@/composables/action";
+import { useTaskStore } from "@/store/task";
+import { t } from "@task/lang";
 
 const props = defineProps<{
     view: ViewType;
@@ -43,6 +47,7 @@ const emits = defineEmits<{
     (e: "hoverEvent", eventInfo: EventInfo): void;
 }>();
 
+const taskStore = useTaskStore();
 const refCalendar = ref<Element | null>(null);
 const { calendar } = useCalendar(
     refCalendar as Ref<Element | null>,
@@ -122,12 +127,26 @@ onRegisterHeaderAndCommand(HeaderPosition.Left, {
         calendar.value?.next();
     },
 });
+
+onRegisterContextmenu({
+    key: ActionKey.CalendarRemoveEvent,
+    label: t("Remove"),
+    filter: ({ panel, payload }) => panel === Panel.Calendar && payload.eventId,
+    exec: async (payload) => {
+        if (payload) {
+            await taskStore.a.remove(payload.eventId);
+            await taskStore.a.list();
+        }
+    },
+});
 </script>
 
 <template>
-    <ContextmenuPopselect :calendar="calendar">
-        <div class="calendar" ref="refCalendar"></div>
-    </ContextmenuPopselect>
+    <div
+        class="calendar"
+        :class="getPanelClass(Panel.Calendar)"
+        ref="refCalendar"
+    ></div>
 </template>
 
 <style>

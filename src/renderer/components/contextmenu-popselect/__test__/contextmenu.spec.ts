@@ -55,44 +55,12 @@ describe("Contextmenu Store", () => {
                 value: command.key,
             });
         });
-
-        it("should format options correctly", () => {
-            const store = useContextmenuStore();
-            const { options } = useSetupHooks(() =>
-                useContextmenu(null, { calendar: null })
-            );
-
-            const command = {
-                key: ActionKey.CalendarAddEvent,
-                label: "Add Event",
-                exec: () => {},
-            };
-            const command2 = {
-                key: ActionKey.CalendarAddProject,
-                label: "Add Project",
-                exec: () => {},
-            };
-
-            store.a.registerCommand(command);
-            store.a.registerCommand(command2);
-
-            expect(options.value).toContainEqual({
-                label: command.label,
-                value: command.key,
-            });
-            expect(options.value).toContainEqual({
-                label: command2.label,
-                value: command2.key,
-            });
-        });
     });
 
     describe("dispatch 'contextmenu'", () => {
         it("dispatches command correctly", () => {
             const store = useContextmenuStore();
-            const { on } = useSetupHooks(() =>
-                useContextmenu(null, { calendar: null })
-            );
+            const { on } = useSetupHooks(() => useContextmenu(null));
 
             const command = {
                 key: ActionKey.CalendarAddEvent,
