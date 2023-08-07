@@ -27,7 +27,7 @@ export const useHeaderStore = defineStore("header", () => {
         [HeaderPosition.RightFixed]: rightFixed,
     };
 
-    function registerAction(position: HeaderPosition, action: HeaderAction) {
+    function registerCommand(position: HeaderPosition, action: HeaderAction) {
         const list = positionMap[position];
         const actions = Array.from(list.value);
         const index = actions.findIndex((item) => item.key === action.key);
@@ -39,7 +39,7 @@ export const useHeaderStore = defineStore("header", () => {
         list.value = actions;
     }
 
-    function unregisterAction(position: HeaderPosition, action: HeaderAction) {
+    function unregisterCommand(position: HeaderPosition, action: HeaderAction) {
         const list = position === HeaderPosition.Left ? left : right;
         const actions = Array.from(list.value);
         const index = actions.findIndex((item) => item.key === action.key);
@@ -56,8 +56,8 @@ export const useHeaderStore = defineStore("header", () => {
         rightFixed,
 
         a: {
-            registerAction,
-            unregisterAction,
+            registerCommand,
+            unregisterCommand,
         },
     };
 });

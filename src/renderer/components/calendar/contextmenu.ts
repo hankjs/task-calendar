@@ -5,8 +5,9 @@ import { SelectOption } from "naive-ui/es/select";
 import Calendar from "@toast-ui/calendar";
 import { findTimeElement } from "./helper";
 import { t } from "@task/lang";
-import { actions2Options, useContextmenuStore } from "./contextmenu.store";
+import { useContextmenuStore } from "./contextmenu.store";
 import { ContextmenuKey } from "./contextmenu.store";
+import { ContextmenuAction } from "@/composables/action";
 
 type Props = {
     calendar: Calendar | null;
@@ -30,13 +31,13 @@ export function useContextmenu(
 
     useEventListener(container, "contextmenu", (e: PointerEvent) => {
         e.preventDefault();
-        if (!e.target || cmStore.contextmenus.length === 0) return;
+        if (!e.target || cmStore.commands.length === 0) return;
         const target = e.target as HTMLElement;
         let parent = findTimeElement(target);
         let event = null;
 
-        if (parent) {
-            event = props.calendar?.getEvent(
+        if (parent && props.calendar) {
+            event = props.calendar.getEvent(
                 parent.dataset.eventId as string,
                 parent.dataset.calendarId as string
             );
@@ -65,7 +66,7 @@ export function useContextmenu(
     }
     //#endregion
     const options = computed(() => {
-        return actions2Options(cmStore.contextmenus);
+        return commands2Options(cmStore.commands);
     });
 
     return {
@@ -78,4 +79,13 @@ export function useContextmenu(
             close,
         },
     };
+}
+
+export function commands2Options(actions: ContextmenuAction[]) {
+    return actions.map((item) => {
+        return {
+            label: item.label ?? item.key,
+            value: item.key,
+        } as SelectOption;
+    });
 }

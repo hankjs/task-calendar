@@ -16,19 +16,19 @@ describe("Header Store", () => {
         };
 
         // Register action on the left
-        store.a.registerAction(HeaderPosition.Left, action);
+        store.a.registerCommand(HeaderPosition.Left, action);
         expect(store.left).toContainEqual(action);
 
         // Unregister action from the left
-        store.a.unregisterAction(HeaderPosition.Left, action);
+        store.a.unregisterCommand(HeaderPosition.Left, action);
         expect(store.left).not.toContainEqual(action);
 
         // Register action on the right
-        store.a.registerAction(HeaderPosition.Right, action);
+        store.a.registerCommand(HeaderPosition.Right, action);
         expect(store.right).toContainEqual(action);
 
         // Unregister action from the right
-        store.a.unregisterAction(HeaderPosition.Right, action);
+        store.a.unregisterCommand(HeaderPosition.Right, action);
         expect(store.right).not.toContainEqual(action);
     });
 });

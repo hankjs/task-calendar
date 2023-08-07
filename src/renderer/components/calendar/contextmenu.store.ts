@@ -1,5 +1,4 @@
 import { ContextmenuAction } from "@/composables/action";
-import { SelectOption } from "naive-ui";
 import { defineStore } from "pinia";
 import { shallowRef } from "vue";
 
@@ -9,51 +8,42 @@ export enum ContextmenuKey {
 }
 
 export const useContextmenuStore = defineStore("contextmenu", () => {
-    const contextmenus = shallowRef<ContextmenuAction[]>([]);
+    const commands = shallowRef<ContextmenuAction[]>([]);
 
-    function registerContextmenu(contextmenu: ContextmenuAction) {
-        const cmds = Array.from(contextmenus.value);
+    function registerCommand(contextmenu: ContextmenuAction) {
+        const cmds = Array.from(commands.value);
         const index = cmds.findIndex((item) => item.key === contextmenu.key);
         if (index !== -1) {
             cmds.splice(index, 1, contextmenu);
         } else {
             cmds.push(contextmenu);
         }
-        contextmenus.value = cmds;
+        commands.value = cmds;
     }
 
-    function unregisterContextmenu(contextmenu: ContextmenuAction) {
-        const cmds = Array.from(contextmenus.value);
+    function unregisterCommand(contextmenu: ContextmenuAction) {
+        const cmds = Array.from(commands.value);
         const index = cmds.findIndex((item) => item.key === contextmenu.key);
         if (index !== -1) {
             cmds.splice(index, 1);
-            contextmenus.value = cmds;
+            commands.value = cmds;
         }
     }
 
     function dispatch(key: ContextmenuKey, payload: any) {
-        const cmd = contextmenus.value.find((item) => item.key === key);
+        const cmd = commands.value.find((item) => item.key === key);
         if (cmd && cmd.exec) {
             cmd.exec(payload);
         }
     }
 
     return {
-        contextmenus,
+        commands,
 
         a: {
-            registerContextmenu,
-            unregisterContextmenu,
+            registerCommand,
+            unregisterCommand,
             dispatch,
         },
     };
 });
-
-export function actions2Options(actions: ContextmenuAction[]) {
-    return actions.map((item) => {
-        return {
-            label: item.label ?? item.key,
-            value: item.key,
-        } as SelectOption;
-    });
-}
