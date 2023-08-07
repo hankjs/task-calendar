@@ -24,9 +24,8 @@ import { t } from "@task/lang";
 import { useTaskStore } from "@/store/task";
 import { Task } from "@task/model";
 import { HeaderPosition, HeaderActionType } from "@/components/header/store";
-import { onRegisterHeaderAndCommand } from "@/composables/action";
+import { ActionKey, onRegisterHeaderAndCommand } from "@/composables/action";
 import { icons, renderIcon } from "@/components/icons/render";
-import { CommandKey } from "@/store/command";
 import Color from "@/components/color/index.vue";
 import { useProjectStore } from "@/store/project";
 
@@ -157,11 +156,11 @@ function onAfterLeave() {
 }
 
 onRegisterHeaderAndCommand(HeaderPosition.Right, {
-    key: CommandKey.CalendarAddEvent,
-    type: HeaderActionType.Icon,
+    key: ActionKey.CalendarAddEvent,
+    type: HeaderActionType.Render,
     props: {
         text: true,
-        renderIcon: () => renderIcon(icons.fluent.Add24Filled),
+        render: () => renderIcon(icons.fluent.Add24Filled),
     },
     exec(payload?: Task) {
         onOpen(payload);

@@ -1,9 +1,11 @@
 import { ViewType } from "@task/config/calendar";
 import { EventObject } from "@toast-ui/calendar";
+import { Project } from "@task/model";
 
 export type CalendarProps = {
     view?: ViewType;
     events?: EventObject[];
+    calendars?: Project[];
 };
 
 export interface SelectDateTimeInfo {

@@ -1,6 +1,7 @@
 import { it, expect, vi, describe, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
-import { ContextmenuKey, useContextmenuStore } from "../contextmenu.store";
+import { useContextmenuStore } from "../contextmenu";
+import { ActionKey } from "@/composables/action";
 
 describe("Contextmenu Store", () => {
     beforeEach(() => {
@@ -11,7 +12,7 @@ describe("Contextmenu Store", () => {
         const store = useContextmenuStore();
 
         const command = {
-            key: ContextmenuKey.CalendarAddEvent,
+            key: ActionKey.CalendarAddEvent,
             exec: () => {},
         };
 
@@ -22,7 +23,7 @@ describe("Contextmenu Store", () => {
         expect(store.commands).not.toContainEqual(command);
 
         const command2 = {
-            key: ContextmenuKey.CalendarAddProject,
+            key: ActionKey.CalendarAddProject,
             exec: () => {},
         };
         store.a.registerCommand(command2);
@@ -36,11 +37,11 @@ describe("Contextmenu Store", () => {
         const store = useContextmenuStore();
 
         const command = {
-            key: ContextmenuKey.CalendarAddEvent,
+            key: ActionKey.CalendarAddEvent,
             exec: vi.fn(),
         };
         const command2 = {
-            key: ContextmenuKey.CalendarAddProject,
+            key: ActionKey.CalendarAddProject,
             exec: vi.fn(),
         };
 

@@ -1,6 +1,7 @@
 import { it, expect, vi, describe, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useHeaderStore, HeaderActionType, HeaderPosition } from "../store";
+import { ActionKey } from "@/composables/action";
 
 describe("Header Store", () => {
     beforeEach(() => {
@@ -11,7 +12,7 @@ describe("Header Store", () => {
         const store = useHeaderStore();
 
         const action = {
-            key: "test-action",
+            key: ActionKey.CalendarAddEvent,
             type: HeaderActionType.Button,
         };
 

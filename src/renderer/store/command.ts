@@ -1,11 +1,6 @@
-import { Action } from "@/composables/action";
+import { Action, ActionKey } from "@/composables/action";
 import { defineStore } from "pinia";
 import { shallowRef } from "vue";
-
-export enum CommandKey {
-    CalendarAddEvent = "CalendarAddEvent",
-    CalendarAddProject = "CalendarAddProject",
-}
 
 export const useCommandStore = defineStore("command", () => {
     const commands = shallowRef<Action[]>([]);
@@ -30,7 +25,7 @@ export const useCommandStore = defineStore("command", () => {
         }
     }
 
-    function dispatch(key: CommandKey, payload: any) {
+    function dispatch(key: ActionKey, payload: any) {
         const cmd = commands.value.find((item) => item.key === key);
         if (cmd) {
             cmd.exec!(payload);

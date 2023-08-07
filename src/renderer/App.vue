@@ -17,10 +17,8 @@ const themeOverrides: GlobalThemeOverrides = {};
     <Config>
         <NLoadingBarProvider>
             <NConfigProvider :theme-overrides="themeOverrides">
-                <NThemeEditor>
-                    <NGlobalStyle />
-                    <router-view />
-                </NThemeEditor>
+                <NGlobalStyle />
+                <router-view />
             </NConfigProvider>
 
             <!-- Global Commnd or Header Fixed Actions -->

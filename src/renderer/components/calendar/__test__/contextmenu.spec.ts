@@ -1,8 +1,9 @@
 import { it, expect, vi, describe, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
-import { ContextmenuKey, useContextmenuStore } from "../contextmenu.store";
+import { useContextmenuStore } from "@/store/contextmenu";
 import { commands2Options, useContextmenu } from "../contextmenu";
 import { useSetupHooks } from "@/tests/component";
+import { ActionKey } from "@/composables/action";
 
 describe("Contextmenu Store", () => {
     beforeEach(() => {
@@ -14,12 +15,12 @@ describe("Contextmenu Store", () => {
             const store = useContextmenuStore();
 
             const command = {
-                key: ContextmenuKey.CalendarAddEvent,
+                key: ActionKey.CalendarAddEvent,
                 label: "Add Event",
                 exec: () => {},
             };
             const command2 = {
-                key: ContextmenuKey.CalendarAddProject,
+                key: ActionKey.CalendarAddProject,
                 label: "Add Project",
                 exec: () => {},
             };
@@ -42,7 +43,7 @@ describe("Contextmenu Store", () => {
             const store = useContextmenuStore();
 
             const command = {
-                key: ContextmenuKey.CalendarAddEvent,
+                key: ActionKey.CalendarAddEvent,
                 exec: () => {},
             };
 
@@ -54,35 +55,35 @@ describe("Contextmenu Store", () => {
                 value: command.key,
             });
         });
-    });
 
-    it("should format options correctly", () => {
-        const store = useContextmenuStore();
-        const { options } = useSetupHooks(() =>
-            useContextmenu(null, { calendar: null })
-        );
+        it("should format options correctly", () => {
+            const store = useContextmenuStore();
+            const { options } = useSetupHooks(() =>
+                useContextmenu(null, { calendar: null })
+            );
 
-        const command = {
-            key: ContextmenuKey.CalendarAddEvent,
-            label: "Add Event",
-            exec: () => {},
-        };
-        const command2 = {
-            key: ContextmenuKey.CalendarAddProject,
-            label: "Add Project",
-            exec: () => {},
-        };
+            const command = {
+                key: ActionKey.CalendarAddEvent,
+                label: "Add Event",
+                exec: () => {},
+            };
+            const command2 = {
+                key: ActionKey.CalendarAddProject,
+                label: "Add Project",
+                exec: () => {},
+            };
 
-        store.a.registerCommand(command);
-        store.a.registerCommand(command2);
+            store.a.registerCommand(command);
+            store.a.registerCommand(command2);
 
-        expect(options.value).toContainEqual({
-            label: command.label,
-            value: command.key,
-        });
-        expect(options.value).toContainEqual({
-            label: command2.label,
-            value: command2.key,
+            expect(options.value).toContainEqual({
+                label: command.label,
+                value: command.key,
+            });
+            expect(options.value).toContainEqual({
+                label: command2.label,
+                value: command2.key,
+            });
         });
     });
 
@@ -94,11 +95,11 @@ describe("Contextmenu Store", () => {
             );
 
             const command = {
-                key: ContextmenuKey.CalendarAddEvent,
+                key: ActionKey.CalendarAddEvent,
                 exec: vi.fn(),
             };
             const command2 = {
-                key: ContextmenuKey.CalendarAddProject,
+                key: ActionKey.CalendarAddProject,
                 exec: vi.fn(),
             };
 

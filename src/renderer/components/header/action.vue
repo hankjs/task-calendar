@@ -16,9 +16,9 @@ const props = defineProps<{
 
 const actionComponentMap = {
     [HeaderActionType.Button]: NButton,
-    [HeaderActionType.Icon]: NButton,
     [HeaderActionType.Text]: (props: any) =>
         h(props.at ?? "span", props, props.render()),
+    [HeaderActionType.Render]: (props: any) => props.render(),
 };
 
 const execEvent = computed(() => props.execEvent ?? "click");
@@ -31,15 +31,12 @@ const execEvent = computed(() => props.execEvent ?? "click");
         :is="actionComponentMap[props.type]"
         v-bind="actionProps"
         v-on="{ [execEvent]: props.exec }"
-        >{{
-            props.actionProps?.render ? props.actionProps.render() : null
-        }}</component
-    >
+    ></component>
 </template>
 
 <style>
-.header-action-item--icon .n-button__icon {
-    font-size: 25px;
-    margin: 0;
+.header-action-item--render.n-icon {
+    cursor: pointer;
+    font-size: var(--header-action-icon-size);
 }
 </style>

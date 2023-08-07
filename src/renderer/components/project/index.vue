@@ -9,7 +9,7 @@ import {
     NSpace,
 } from "naive-ui";
 import { HeaderPosition, HeaderActionType } from "@/components/header/store";
-import { onRegisterHeaderAndCommand } from "@/composables/action";
+import { ActionKey, onRegisterHeaderAndCommand } from "@/composables/action";
 import { icons, renderIcon } from "@/components/icons/render";
 import { RootCssVar } from "@/styles/variables";
 import { useConfig } from "@/components/config/hooks";
@@ -18,17 +18,16 @@ import { useProjectStore } from "@/store/project";
 import AddProject from "./add.vue";
 import PreviewProject from "./preview.vue";
 import { Project } from "@task/model";
-import { CommandKey } from "@/store/command";
 
 const show = ref(false);
 const refAddProject = ref<typeof AddProject | null>(null);
 
 onRegisterHeaderAndCommand(HeaderPosition.RightFixed, {
-    key: CommandKey.CalendarAddProject,
-    type: HeaderActionType.Icon,
+    key: ActionKey.CalendarAddProject,
+    type: HeaderActionType.Render,
     props: {
         text: true,
-        renderIcon: () => renderIcon(icons.fluent.AppFolder24Filled),
+        render: () => renderIcon(icons.fluent.AppFolder24Filled),
     },
     exec() {
         show.value = true;

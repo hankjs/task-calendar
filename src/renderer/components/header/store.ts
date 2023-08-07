@@ -4,8 +4,8 @@ import { shallowRef } from "vue";
 
 export enum HeaderActionType {
     Button = "button",
-    Icon = "icon",
     Text = "text",
+    Render = "render",
 }
 
 export enum HeaderPosition {

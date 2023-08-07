@@ -5,12 +5,25 @@ import {
     useHeaderStore,
 } from "@/components/header/store";
 import { onMounted, onUnmounted } from "vue";
-import { useContextmenuStore } from "@/components/calendar/contextmenu.store";
+import {
+    ContextmenuFilter,
+    ContextmenuType,
+    useContextmenuStore,
+} from "@/store/contextmenu";
 
 export { HeaderActionType, HeaderPosition } from "@/components/header/store";
 
+export enum ActionKey {
+    CalendarAddEvent = "CalendarAddEvent",
+    CalendarRemoveEvent = "CalendarRemoveEvent",
+    CalendarAddProject = "CalendarAddProject",
+    CalendarView = "CalendarView",
+    CalendarPrev = "CalendarPrev",
+    CalendarNext = "CalendarNext",
+}
+
 export type HeaderAction = {
-    key: string;
+    key: ActionKey;
     type: HeaderActionType;
     props?: {
         render?: () => any;
@@ -20,13 +33,14 @@ export type HeaderAction = {
 };
 
 export type CommandAction = {
-    key: string;
+    key: ActionKey;
     exec: (payload?: any) => void;
 };
 
 export type ContextmenuAction = {
-    key: string;
+    key: ActionKey;
     label?: string;
+    filter?: (exp: ContextmenuFilter) => boolean;
     exec: (payload?: any) => void;
 };
 

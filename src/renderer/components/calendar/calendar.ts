@@ -11,7 +11,6 @@ import {
     SelectDateTimeInfo,
     UpdatedEventInfo,
 } from "./props";
-import { useProjectStore } from "@/store/project";
 
 export function useCalendar(
     refEl: Ref<Element | null>,
@@ -19,7 +18,6 @@ export function useCalendar(
     emits: CalendarEmits
 ) {
     const calendar = shallowRef<Calendar | null>(null);
-    const projectStore = useProjectStore();
 
     function renderEvents(events?: EventObject[]) {
         calendar.value?.clear();
@@ -33,10 +31,10 @@ export function useCalendar(
         if (!el) {
             return;
         }
-        const calendars = await projectStore.a.list();
+
         const cal = new Calendar(el as Element, {
             ...DEFAULT_CONFIG,
-            calendars,
+            calendars: props.calendars,
         });
         cal.on("selectDateTime", (info: SelectDateTimeInfo) => {
             if (info.gridSelectionElements.length > 0) {
@@ -90,7 +88,7 @@ export function useCalendar(
     watch(() => refEl.value, renderCalendar);
 
     watch(
-        () => projectStore.projects,
+        () => props.calendars,
         (calendars) => {
             if (!calendars) {
                 return;

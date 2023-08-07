@@ -9,6 +9,7 @@ import { toRef } from "vue";
 
 export function useCalendarTask() {
     const taskStore = useTaskStore();
+
     taskStore.a.list();
     const tasks = toRef(taskStore, "tasks");
 
@@ -46,8 +47,10 @@ export function useCalendarTask() {
 
 export function useCalendarProject() {
     const projectStore = useProjectStore();
+    const projects = toRef(projectStore, "projects");
+    projectStore.a.list();
 
     return {
-        projects: projectStore.projects,
+        projects,
     };
 }

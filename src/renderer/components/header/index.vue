@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { useHeaderStore } from "./store";
 import HeaderAction from "./action.vue";
-import { NDivider } from "naive-ui";
+import { NDivider, NSpace } from "naive-ui";
 
 const headerStore = useHeaderStore();
 </script>
 
 <template>
     <header class="header">
-        <div class="header-title">
+        <div class="header-left">
             <HeaderAction
+                class="header-action"
                 v-for="action in headerStore.leftFixed"
                 :key="action.key"
                 :type="action.type"
@@ -18,9 +19,8 @@ const headerStore = useHeaderStore();
             ></HeaderAction>
 
             <template v-if="headerStore.left.length">
-                <NDivider vertical />
-
                 <HeaderAction
+                    class="header-action"
                     v-for="action in headerStore.left"
                     :key="action.key"
                     :type="action.type"
@@ -29,8 +29,9 @@ const headerStore = useHeaderStore();
                 ></HeaderAction>
             </template>
         </div>
-        <div class="header-actions">
+        <div class="header-rigth">
             <HeaderAction
+                class="header-action"
                 v-for="action in headerStore.right"
                 :key="action.key"
                 :type="action.type"
@@ -39,9 +40,8 @@ const headerStore = useHeaderStore();
             ></HeaderAction>
 
             <template v-if="headerStore.rightFixed.length">
-                <NDivider vertical />
-
                 <HeaderAction
+                    class="header-action"
                     v-for="action in headerStore.rightFixed"
                     :key="action.key"
                     :type="action.type"
@@ -63,13 +63,19 @@ const headerStore = useHeaderStore();
     padding-inline: var(--header-padding-inline);
 }
 
-.header-actions,
-.header-title {
+.header-rigth,
+.header-left {
     display: flex;
     align-items: center;
 }
 
-.header-actions {
+.header-rigth {
     justify-content: var(--header-actions-justify-content);
+}
+.header-action {
+    margin-right: var(--header-action-gap);
+}
+.header-action:nth-last-child(1) {
+    margin-right: 0;
 }
 </style>

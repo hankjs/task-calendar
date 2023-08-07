@@ -8,12 +8,13 @@ import {
 } from "@/components/header/store";
 import { useCommandStore } from "@/store/command";
 import {
+    ActionKey,
     onRegisterAll,
     onRegisterCommand,
     onRegisterHeader,
     onRegisterHeaderAndCommand,
 } from "../action";
-import { useContextmenuStore } from "@/components/calendar/contextmenu.store";
+import { useContextmenuStore } from "@/store/contextmenu";
 
 describe("Action Redister helper", () => {
     beforeEach(() => {
@@ -24,7 +25,7 @@ describe("Action Redister helper", () => {
         it("registers and unregisters header actions", () => {
             const store = useHeaderStore();
             const action = {
-                key: "test-action",
+                key: ActionKey.CalendarAddEvent,
                 type: HeaderActionType.Button,
             };
 
@@ -44,7 +45,7 @@ describe("Action Redister helper", () => {
         it("registers and unregisters command", () => {
             const store = useCommandStore();
             const action = {
-                key: "test-action",
+                key: ActionKey.CalendarAddEvent,
                 exec() {},
             };
 
@@ -63,7 +64,7 @@ describe("Action Redister helper", () => {
         it("registers and unregisters contextmenu action", () => {
             const store = useCommandStore();
             const action = {
-                key: "test-action",
+                key: ActionKey.CalendarAddEvent,
                 exec() {},
             };
 
@@ -83,7 +84,7 @@ describe("Action Redister helper", () => {
             const headerStore = useCommandStore();
             const commandStore = useCommandStore();
             const action = {
-                key: "test-action",
+                key: ActionKey.CalendarAddEvent,
                 type: HeaderActionType.Button,
                 exec() {},
             };
@@ -105,7 +106,7 @@ describe("Action Redister helper", () => {
             const commandStore = useCommandStore();
             const contextmenuStore = useContextmenuStore();
             const action = {
-                key: "test-action",
+                key: ActionKey.CalendarAddEvent,
                 label: "TestAction",
                 type: HeaderActionType.Button,
                 exec() {},

@@ -33,6 +33,8 @@ export const RootCssVar = {
         "--header-grid-template": "--header-grid-template",
         "--header-grid-template-areas": "--header-grid-template-areas",
         "--header-actions-justify-content": "--header-actions-justify-content",
+        "--header-action-gap": "--header-action-gap",
+        "--header-action-icon-size": "--header-action-icon-size",
     },
 
     PageMain: {

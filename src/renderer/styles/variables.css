@@ -29,6 +29,8 @@
     --header-grid-template: 1fr / 1fr 1fr;
     --header-grid-template-areas: "title actions";
     --header-actions-justify-content: end;
+    --header-action-gap: var(--base-gap);
+    --header-action-icon-size: 25px;
     /*#endregion */
 
     /*#region PageMain */
