@@ -27,6 +27,7 @@ import { Panel } from "@/store/contextmenu";
 import { onRegisterContextmenu } from "@/composables/action";
 import { useTaskStore } from "@/store/task";
 import { t } from "@task/lang";
+import { useCommandStore } from "@/store/command";
 
 const props = defineProps<{
     view: ViewType;
@@ -48,6 +49,7 @@ const emits = defineEmits<{
 }>();
 
 const taskStore = useTaskStore();
+const commandStore = useCommandStore();
 const refCalendar = ref<Element | null>(null);
 const { calendar } = useCalendar(
     refCalendar as Ref<Element | null>,
@@ -125,6 +127,22 @@ onRegisterHeaderAndCommand(HeaderPosition.Left, {
     },
     exec() {
         calendar.value?.next();
+    },
+});
+
+onRegisterContextmenu({
+    key: ActionKey.ContextmenuEditEvent,
+    label: t("Edit"),
+    filter: ({ panel, payload }) => panel === Panel.Calendar && payload.eventId,
+    exec: async (payload) => {
+        const event = calendar.value?.getEvent(
+            payload.eventId as string,
+            payload.calendarId as string
+        );
+        if (!event || !event.raw) {
+            return;
+        }
+        commandStore.a.dispatch(ActionKey.CalendarAddEvent, event.raw);
     },
 });
 

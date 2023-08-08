@@ -5,13 +5,24 @@ import {
     UpdatedEventInfo,
 } from "@/components/calendar/props";
 import { useProjectStore } from "@/store/project";
-import { toRef } from "vue";
+import { computed, toRef } from "vue";
 
 export function useCalendarTask() {
     const taskStore = useTaskStore();
 
     taskStore.a.list();
-    const tasks = toRef(taskStore, "tasks");
+    const tasks = computed(() => {
+        if (!taskStore.tasks) {
+            return [];
+        }
+
+        return taskStore.tasks.map((task) => {
+            return {
+                ...task,
+                raw: task,
+            };
+        });
+    });
 
     //#region Handlers
     async function selectDateTime(info: SelectDateTimeInfo) {

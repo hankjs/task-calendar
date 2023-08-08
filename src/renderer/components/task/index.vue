@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, shallowRef } from "vue";
+import dayjs from "dayjs";
 import {
     NDrawer,
     NDrawerContent,
@@ -110,32 +111,31 @@ const rules: FormRules = {
 const loadingBar = useLoadingBar();
 
 async function onOpen(task?: Task) {
-    loadingBar.start();
-    try {
-        isEdit.value = !!task;
-        show.value = true;
-        await projectStore.a.list();
-        /** edit */
-        if (!task) {
-            return;
-        }
-
-        modelRef.value = {
-            ...task,
-            calendarId: task.calendarId
-                ? task.calendarId
-                : await projectStore.a.defaultId(),
-            category: task.category ? task.category : CategoryType.Time,
-        };
-    } finally {
-        loadingBar.finish();
+    isEdit.value = !!task;
+    show.value = true;
+    /** edit */
+    if (!task) {
+        return;
     }
+
+    console.log("task", task);
+
+    modelRef.value = {
+        ...task,
+        calendarId: task.calendarId
+            ? task.calendarId
+            : await projectStore.a.defaultId(),
+        category: task.category ? task.category : CategoryType.Time,
+        start: task.start ? dayjs(task.start).valueOf() : undefined,
+        end: task.end ? dayjs(task.end).valueOf() : undefined,
+    };
 }
 
 async function onFinish(e: MouseEvent) {
     e.preventDefault();
-    await formRef.value?.validate();
     try {
+        loadingBar.start();
+        await formRef.value?.validate();
         if (isEdit.value) {
             await taskStore.a.update(
                 modelRef.value.id!,
@@ -145,8 +145,11 @@ async function onFinish(e: MouseEvent) {
             await taskStore.a.add(modelRef.value as Task);
         }
         show.value = false;
+        await taskStore.a.list();
     } catch (error) {
         console.error(error);
+    } finally {
+        loadingBar.finish();
     }
 }
 
@@ -162,8 +165,8 @@ onRegisterHeaderAndCommand(HeaderPosition.Right, {
         text: true,
         render: () => renderIcon(icons.fluent.Add24Filled),
     },
-    exec() {
-        onOpen();
+    exec(task?: Task) {
+        onOpen(task?.id ? task : undefined);
     },
 });
 </script>

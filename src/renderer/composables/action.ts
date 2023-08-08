@@ -13,6 +13,7 @@ export enum ActionKey {
     CalendarAddEvent = "CalendarAddEvent",
     CalendarRemoveEvent = "CalendarRemoveEvent",
     CalendarAddProject = "CalendarAddProject",
+    ContextmenuEditEvent = "ContextmenuEditEvent",
     CalendarView = "CalendarView",
     CalendarPrev = "CalendarPrev",
     CalendarNext = "CalendarNext",
