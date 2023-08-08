@@ -19,7 +19,7 @@ const { show, options, data, on } = useContextmenu(refContainer);
         :style="{
             minWidth: `var(${RootCssVar.Calendar['--contextmenu-min-width']})`,
         }"
-        placement="bottom"
+        placement="bottom-start"
         :options="options"
         :show-arrow="false"
         :show="show"

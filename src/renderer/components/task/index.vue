@@ -162,8 +162,8 @@ onRegisterHeaderAndCommand(HeaderPosition.Right, {
         text: true,
         render: () => renderIcon(icons.fluent.Add24Filled),
     },
-    exec(payload?: Task) {
-        onOpen(payload);
+    exec() {
+        onOpen();
     },
 });
 </script>
