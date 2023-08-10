@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, h, ref } from "vue";
+import { Ref, ref } from "vue";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 import { ViewType } from "@task/config/calendar";
 import { useCalendar } from "./calendar";
@@ -14,20 +14,8 @@ import {
 import { useEventListener } from "@vueuse/core";
 import { throttle } from "lodash-es";
 import { findTimeElement } from "./helper";
-import {
-    ActionKey,
-    HeaderActionType,
-    HeaderPosition,
-    onRegisterHeaderAndCommand,
-} from "@/composables/action";
-import { icons, renderIcon } from "../icons/render";
-import { NSelect } from "naive-ui";
 import { getPanelClass } from "@/components/contextmenu-popselect/contextmenu";
 import { Panel } from "@/store/contextmenu";
-import { onRegisterContextmenu } from "@/composables/action";
-import { useTaskStore } from "@/store/task";
-import { t } from "@task/lang";
-import { useCommandStore } from "@/store/command";
 
 const props = defineProps<{
     view: ViewType;
@@ -48,8 +36,6 @@ const emits = defineEmits<{
     (e: "hoverEvent", eventInfo: EventInfo): void;
 }>();
 
-const taskStore = useTaskStore();
-const commandStore = useCommandStore();
 const refCalendar = ref<Element | null>(null);
 const { calendar } = useCalendar(
     refCalendar as Ref<Element | null>,
@@ -83,78 +69,12 @@ useEventListener(
     }, 500)
 );
 
-onRegisterHeaderAndCommand(HeaderPosition.Left, {
-    key: ActionKey.CalendarPrev,
-    type: HeaderActionType.Render,
-    props: {
-        text: true,
-        render: () => renderIcon(icons.fluent.ChevronLeft24Filled),
-    },
-    exec() {
-        calendar.value?.prev();
-    },
-});
-
-onRegisterHeaderAndCommand(HeaderPosition.Left, {
-    key: ActionKey.CalendarView,
-    type: HeaderActionType.Render,
-    props: {
-        render: () =>
-            h(NSelect, {
-                options: [
-                    { label: "Day", value: ViewType.Day },
-                    { label: "Month", value: ViewType.Month },
-                    { label: "Week", value: ViewType.Week },
-                ],
-                placeholder: "",
-                style: {
-                    width: "100px",
-                },
-                defaultValue: props.view,
-                "onUpdate:value": (v: ViewType) => {
-                    calendar.value?.changeView(v);
-                },
-            }),
-    },
-});
-
-onRegisterHeaderAndCommand(HeaderPosition.Left, {
-    key: ActionKey.CalendarNext,
-    type: HeaderActionType.Render,
-    props: {
-        text: true,
-        render: () => renderIcon(icons.fluent.ChevronRight24Filled),
-    },
-    exec() {
+defineExpose({
+    next() {
         calendar.value?.next();
     },
-});
-
-onRegisterContextmenu({
-    key: ActionKey.ContextmenuEditEvent,
-    label: t("Edit"),
-    filter: ({ panel, payload }) => panel === Panel.Calendar && payload.eventId,
-    exec: async (payload) => {
-        const event = calendar.value?.getEvent(
-            payload.eventId as string,
-            payload.calendarId as string
-        );
-        if (!event || !event.raw) {
-            return;
-        }
-        commandStore.a.dispatch(ActionKey.CalendarAddEvent, event.raw);
-    },
-});
-
-onRegisterContextmenu({
-    key: ActionKey.CalendarRemoveEvent,
-    label: t("Remove"),
-    filter: ({ panel, payload }) => panel === Panel.Calendar && payload.eventId,
-    exec: async (payload) => {
-        if (payload) {
-            await taskStore.a.remove(payload.eventId);
-            await taskStore.a.list();
-        }
+    prev() {
+        calendar.value?.prev();
     },
 });
 </script>

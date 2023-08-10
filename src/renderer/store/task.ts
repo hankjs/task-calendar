@@ -20,6 +20,9 @@ export const useTaskStore = defineStore("task", () => {
     async function list() {
         return await rTasks.runAsync();
     }
+    async function detail(id: string) {
+        return await db.task.detail(id);
+    }
 
     async function add(task: Partial<Task>) {
         const newTask = await db.task.add(task);
@@ -49,6 +52,7 @@ export const useTaskStore = defineStore("task", () => {
         /** Actions */
         a: {
             list,
+            detail,
             add,
             update,
             remove,

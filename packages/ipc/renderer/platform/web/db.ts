@@ -34,6 +34,16 @@ export class BridgeTaskDBWeb implements BridgeTaskDB {
         return taskStore.getTasks();
     }
 
+    async detail(id: string) {
+        const tasks = taskStore.getTasks();
+        const task = tasks.find((t) => t.id === id);
+        if (task) {
+            return task;
+        }
+
+        return null;
+    }
+
     async add(task: Partial<Task>) {
         let { calendarId } = task;
         if (!calendarId) {
@@ -101,6 +111,16 @@ export class BridgeProjectDBWeb implements BridgeProjectDB {
 
     async list(): Promise<Project[]> {
         return projectStore.getProjects();
+    }
+
+    async detail(id: string) {
+        const projects = projectStore.getProjects();
+        const project = projects.find((t) => t.id === id);
+        if (project) {
+            return project;
+        }
+
+        return null;
     }
 
     async add(project: Partial<Project>): Promise<void | Project> {
