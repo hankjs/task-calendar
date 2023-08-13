@@ -12,6 +12,10 @@ export let router = VueRouter.createRouter({
                     path: "",
                     component: () => import("./pages/calendar/index.vue"),
                 },
+                {
+                    path: "/main/settings",
+                    component: () => import("./pages/settings/index.vue"),
+                },
             ],
         },
         {
